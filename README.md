@@ -40,14 +40,14 @@ Start at **Sep 16, 2024**
 
 **48 Days in total!**
 
-| Activity Code | Description/Task Sets               | Estimated Time(Day)      | Predecessors                | Remaining Days |
-| ------------- | ----------------------------------- | ------------------------ | --------------------------- | -------------- |
-| 1             | Gather Datas                        | 31 **(Sep 16 - Oct 17)** | Asynchronous Task           | -              |
-| 2             | Find References & Functional Design | 3 **(Sep 16 - Sep 19)**  | -                           | 45             |
-| 3             | UI Design                           | 7 **(Sep 19 - Sep 26)**  | 2                           | 38             |
-| 4             | Implement (Coding!)                 | 21 **(Sep 26 - Oct 17)** | 2, 3                        | 17             |
-| 5             | Test and Debug                      | 3 **(Oct 17 - Oct 20)**  | 2, 3, 4                     | 14             |
-| 6             | Finish The Project Plan             | 11 **(Oct 20 - Oct 31)** | 1, 2, 3, 4, 5. Can be Asyn. | 3              |
+| Activity Code | Description/Task Sets               | Estimated Time(Day)      | Predecessors                | Remaining Days | Progress |
+| ------------- | ----------------------------------- | ------------------------ | --------------------------- | -------------- | -------- |
+| 1             | Gather Datas                        | 31 **(Sep 16 - Oct 17)** | Asynchronous Task           | -              |          |
+| 2             | Find References & Functional Design | 3 **(Sep 16 - Sep 19)**  | -                           | 45             |          |
+| 3             | UI Design                           | 7 **(Sep 19 - Sep 26)**  | 2                           | 38             |          |
+| 4             | Implement (Coding!)                 | 21 **(Sep 26 - Oct 17)** | 2, 3                        | 17             |          |
+| 5             | Test and Debug                      | 3 **(Oct 17 - Oct 20)**  | 2, 3, 4                     | 14             |          |
+| 6             | Finish The Project Plan             | 11 **(Oct 20 - Oct 31)** | 1, 2, 3, 4, 5. Can be Asyn. | 3              |          |
 
 
 
