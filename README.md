@@ -60,9 +60,9 @@ Not yet
 ## Tech Stack
 
 - **Frontend**: Nuxt.js + Vue.js + TypeScript
-- **Backend**: TypeScript
+- **Backend**: Vapor + Swift
 - **Database**: PostgreSQL
-- **AI Integration**: AI-based analysis for categorization and store location tagging
+- **AI Integration**: Google Vision AI
 
 
 
