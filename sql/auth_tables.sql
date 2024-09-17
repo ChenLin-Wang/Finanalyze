@@ -48,7 +48,7 @@ CREATE TABLE password_resets (
 
 -- 会话表，存储用户登录的会话信息
 -- Sessions table, stores user login session information
-CREATE TABLE sessionss (
+CREATE TABLE sessions (
     id SERIAL PRIMARY KEY,                       -- 会话唯一标识符 / Session unique identifier
     user_id INTEGER REFERENCES users(id),        -- 关联到用户表的外键 / Foreign key to users table
     session_token VARCHAR(255) NOT NULL,         -- 会话令牌 / Session token

@@ -1,0 +1,5 @@
+{
+    "git.enableSmartCommit": true,
+    "search.followSymlinks": false,
+    "git.autorefresh": false
+}
