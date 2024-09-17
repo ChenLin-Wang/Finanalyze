@@ -24,7 +24,7 @@ final class PswReset: Model, @unchecked Sendable {
     ]
 
     @ID(key: .id)                   var id: UUID?
-    @Field(key: T[1].0)             var userId: UUID
+    @Parent(key: T[1].0)            var user: User
     @Field(key: T[2].0)             var resetToken: String
     @Field(key: T[3].0)             var expiresAt: Date?
     @Field(key: T[4].0)             var createdAt: Date?
@@ -33,7 +33,7 @@ final class PswReset: Model, @unchecked Sendable {
 
     init(id: UUID? = nil, userId: UUID, resetToken: String) {
         self.id = id
-        self.userId = userId
+        self.$user.id = userId
         self.resetToken = resetToken
         self.createdAt = .now
         self.expiresAt = self.createdAt?.addingTimeInterval(10080)  // 7 days

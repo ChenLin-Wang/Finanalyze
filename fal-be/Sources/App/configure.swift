@@ -21,6 +21,7 @@ public func configure(_ app: Application) async throws {
     )
     app.migrations.add(CreateUser())
     app.migrations.add(CreatePwdReset())
+    app.migrations.add(CreateSession())
     app.logger.logLevel = .debug
     try await app.autoMigrate()
     try routes(app)

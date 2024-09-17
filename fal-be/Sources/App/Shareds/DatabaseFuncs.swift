@@ -4,6 +4,7 @@ import SQLKit
 final class TableNames {
     static let users = "users"
     static let pswReset = "password_reset"
+    static let sessions = "sessions"
 }
 
 typealias FieldType = (FieldKey, DatabaseSchema.DataType, [DatabaseSchema.FieldConstraint], Bool)
