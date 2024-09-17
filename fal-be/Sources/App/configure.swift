@@ -20,7 +20,8 @@ public func configure(_ app: Application) async throws {
         as: .psql
     )
     app.migrations.add(CreateUser())
-    // app.logger.logLevel = .debug
+    app.migrations.add(CreatePwdReset())
+    app.logger.logLevel = .debug
     try await app.autoMigrate()
     try routes(app)
 }
