@@ -3,6 +3,7 @@ import Vapor
 func routes(_ app: Application) throws {
     app.get { req async in
         print("Hello world!")
+        
         return "It works!"
     }
 
