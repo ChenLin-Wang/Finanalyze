@@ -1,17 +1,27 @@
 import Vapor
 import Fluent
 
-final class User: Model {
-    static let schema = "users"
+final class User: Model, @unchecked Sendable {
+    static let schema = TableNames.users
+
+    static let T: [FieldType] = [
+        ("email", .string, [.required]),
+        ("username", .string, []),
+        ("password", .string, [.required]),
+        ("is_active", .bool, []),
+        ("is_verified", .bool, []),
+        ("created_at", .date, []),
+        ("updated_at", .date, []),
+    ]
     
-    @ID(key: .id)                                   var id: UUID?
-    @Field(key: "email")                            var email: String
-    @Field(key: "username")                         var username: String?
-    @Field(key: "password")                         var passwordHash: String
-    @Field(key: "is_active")                        var isActive: Bool
-    @Field(key: "is_verified")                      var isVerified: Bool
-    @Timestamp(key: "created_at", on: .create)      var createdAt: Date?
-    @Timestamp(key: "updated_at", on: .update)      var updatedAt: Date?
+    @ID(key: .id)                               var id: UUID?
+    @Field(key: T[0].0)                         var email: String
+    @Field(key: T[1].0)                         var username: String?
+    @Field(key: T[2].0)                         var passwordHash: String
+    @Field(key: T[3].0)                         var isActive: Bool
+    @Field(key: T[4].0)                         var isVerified: Bool
+    @Timestamp(key: T[5].0, on: .create)        var createdAt: Date?
+    @Timestamp(key: T[6].0, on: .update)        var updatedAt: Date?
 
     init() {}
 

@@ -3,5 +3,7 @@
         "comments": "off",
         "strings": "off",
         "other": "off"
-    }
+    },
+    "editor.fontFamily": "Fira Code Retina",
+    "editor.fontLigatures": true
 }

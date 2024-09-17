@@ -11,13 +11,16 @@ public func configure(_ app: Application) async throws {
         .postgres(
             configuration: .init(
                 hostname: "localhost",
-                username: "admin",
-                password: nil,
+                username: "vapor",
+                password: "159753",
                 database: "finanalyze",
                 tls: .disable
             )
         ),
         as: .psql
     )
+    app.migrations.add(CreateUser())
+    // app.logger.logLevel = .debug
+    try await app.autoMigrate()
     try routes(app)
 }
