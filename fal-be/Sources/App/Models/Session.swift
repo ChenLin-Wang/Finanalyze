@@ -19,15 +19,17 @@ final class Session: Model, @unchecked Sendable {
         ("id", .uuid, [.required], true),
         ("user_id", User.T[0].1, [.required, .references(User.schema, User.T[0].0)], false),
         ("session_token", .string, [.required], false),
-        ("expires_at", .date, [.required], false),
-        ("created_at", .date, [.required, Def(SQLFunction("NOW"))], false)
+        ("expires_at", .string, [.required], false),
+        ("created_at", .string, [.required], false)
     ]
 
-    @ID(key: .id)                   var id: UUID?
-    @Parent(key: T[1].0)            var user: User
-    @Field(key: T[2].0)             var sessionToken: String
-    @Field(key: T[3].0)             var expiresAt: Date?
-    @Field(key: T[4].0)             var createdAt: Date?
+    @ID(key: .id)                                   var id: UUID?
+    @Parent(key: T[1].0)                            var user: User
+    @Field(key: T[2].0)                             var sessionToken: String
+    @Timestamp(key: T[3].0, on: .none, 
+    format: .iso8601(withMilliseconds: true))       var expiresAt: Date?
+    @Timestamp(key: T[4].0, on: .create, 
+    format: .iso8601(withMilliseconds: true))       var createdAt: Date?
 
     init() {}
 

@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <v-card class="mx-auto pa-12 pb-8" elevation="8" max-width="448" rounded="lg">
+    <v-card class="mx-auto pa-12 pb-8" elevation="8" max-width="448" rounded="lg">
+        <v-form ref="form">
             <div class="text-subtitle-1 text-medium-emphasis">Create an Account</div>
 
             <v-text-field density="compact" placeholder="Email address" prepend-inner-icon="mdi-email-outline"
@@ -37,11 +37,12 @@
                     Already have an account? <v-icon icon="mdi-chevron-right"></v-icon>
                 </v-btn>
             </v-card-text>
-        </v-card>
-    </div>
+        </v-form>
+    </v-card>
 </template>
 
 <script setup lang="ts">
+import type { VForm } from 'vuetify/components';
 import { Paths } from '~/shared/paths';
 
 const email = ref('')
@@ -62,7 +63,14 @@ const confirmPasswordRules = ref([
     (v: string) => v === password.value || 'Passwords must match',
 ])
 
-const register = () => {
-    
+export type UserRegisData = { email: string, password: string }
+const emit = defineEmits<{ (e: "submit", data: UserRegisData): void }>()
+const form = ref<VForm | null>(null);
+const register = async () => {
+    if (form.value == undefined) return;
+    const { valid } = await form.value?.validate()
+    if (valid) {
+        emit('submit', { email: email.value, password: password.value });
+    }
 }
 </script>

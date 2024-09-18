@@ -1,5 +1,6 @@
 import Fluent
 import SQLKit
+import Vapor
 
 final class TableNames {
     static let users = "users"
@@ -38,4 +39,17 @@ func TableCreate(_ name: String, database: Database, types: [FieldType]) -> Even
         default: print("<\(name)>: Too much db unique field constraints")
     }
     return s.create()
+}
+
+protocol DModel: Model, AsyncResponseEncodable, Sendable {
+    associatedtype REQ: Content & Sendable
+    associatedtype DTO: Content & Sendable
+    @Sendable func dto(req: Request) -> DTO
+}
+
+extension DModel {
+    @Sendable public func encodeResponse(for request: Request) async throws -> Response {
+        let dto = self.dto(req: request)
+        return try await dto.encodeResponse(for: request)
+    }
 }

@@ -11,22 +11,27 @@
 //     updated_at TIMESTAMPTZ DEFAULT NOW(),        -- 账户最后更新时间 / Last account update time
 // );
 
+/*
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+*/
+
 import Vapor
 import Fluent
 import SQLKit
 
-final class User: Model, @unchecked Sendable {
+final class User: DModel, @unchecked Sendable {
     static let schema = TableNames.users
 
     static let T: [FieldType] = [
         ("id", .uuid, [.required], true),
         ("email", .string, [.required], true),
-        ("username", .string, [.required, Def(RandomString(length: 12))], false),
+        ("username", .string, [.required], false),
         ("password", .string, [.required], false),
         ("is_active", .bool, [.required, Def(true)], false),
         ("is_verified", .bool, [.required, Def(false)], false),
-        ("created_at", .date, [.required, Def(SQLFunction("NOW"))], false),
-        ("updated_at", .date, [.required, Def(SQLFunction("NOW"))], false),
+        ("created_at", .string, [.required], false),
+        ("updated_at", .string, [.required], false),
     ]
     
     @ID(key: .id)                                               var id: UUID?
@@ -35,17 +40,32 @@ final class User: Model, @unchecked Sendable {
     @Field(key: T[3].0)                                         var passwordHash: String
     @Field(key: T[4].0)                                         var isActive: Bool
     @Field(key: T[5].0)                                         var isVerified: Bool
-    @Timestamp(key: T[6].0, on: .create, format: .iso8601)      var createdAt: Date?
-    @Timestamp(key: T[7].0, on: .update, format: .iso8601)      var updatedAt: Date?
+    @Timestamp(key: T[6].0, on: .create, 
+    format: .iso8601(withMilliseconds: true))                   var createdAt: Date?             
+    @Timestamp(key: T[7].0, on: .update, 
+    format: .iso8601(withMilliseconds: true))                   var updatedAt: Date?
+
+    struct REQ: Content, Sendable {
+        let email: String
+        let password: String
+    }
+
+    struct DTO: Content, Sendable {
+        let id: UUID?
+        let email: String
+        let username: String?
+    }
+
+    @Sendable func dto(req: Request) -> DTO { DTO(id: self.id, email: self.email, username: self.username) }
 
     init() {}
 
-    init(id: UUID? = nil, email: String, username: String?, passwordHash: String, isActive: Bool = true, isVerified: Bool = false) {
-        self.id = id
+    init(email: String, passwordHash: String) {
+        self.id = nil
         self.email = email
-        self.username = username
         self.passwordHash = passwordHash
-        self.isActive = isActive
-        self.isVerified = isVerified
+        self.username = RandomString(length: 12)
+        self.createdAt = nil
+        self.updatedAt = nil
     }
 }
