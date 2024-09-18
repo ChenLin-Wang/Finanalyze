@@ -6,6 +6,12 @@ export const be_paras = {
 
 export const be_api = {
     auth: {
-        register: '/register'
+        register: '/auth'
     }
+}
+
+export type AuthPostRes = {
+    email: string,
+    username: string,
+    id: string
 }

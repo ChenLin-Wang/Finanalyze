@@ -20,6 +20,18 @@ public func configure(_ app: Application) async throws {
         ),
         as: .psql
     )
+
+    let corsConfiguration = CORSMiddleware.Configuration(
+        allowedOrigin: .all,
+        allowedMethods: [.GET, .POST, .PUT, .OPTIONS, .DELETE, .PATCH],
+        allowedHeaders: [.accept, .authorization, .contentType, .origin, .xRequestedWith, .userAgent, .accessControlAllowOrigin]
+    )
+
+    let cors = CORSMiddleware(configuration: corsConfiguration)
+    let error = ErrorMiddleware.default(environment: app.environment)
+    
+    app.middleware.use(cors)
+    app.middleware.use(error)
     app.migrations.add(CreateUser())
     app.migrations.add(CreatePwdReset())
     app.migrations.add(CreateSession())

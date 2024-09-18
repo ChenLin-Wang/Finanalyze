@@ -8,12 +8,13 @@ struct AuthC: RouteCollection {
     }
 
     @Sendable func create(req: Request) async throws -> User {
-        print("hello")
         let userReq = try req.content.decode(User.REQ.self)
-        print(userReq)
         let user = User(email: userReq.email, passwordHash: userReq.password)
-        print(user)
         try await user.save(on: req.db)
         return user
     }
+
+    // @Sendable func find(req: Request) async throws -> [User] {
+        
+    // }
 }

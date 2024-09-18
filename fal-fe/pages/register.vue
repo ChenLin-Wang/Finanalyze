@@ -1,18 +1,22 @@
 <script setup lang="ts">
 import type { UserRegisData } from '~/components/Auth/Regis.vue';
-import { be_api, be_paras } from '~/shared/be_conf';
+import { be_api, be_paras, type AuthPostRes } from '~/shared/be_conf';
 
 definePageMeta({ layout: 'plain' })
 
 const regis = async (value: UserRegisData) => {
     try {
-        const res = await $fetch(be_paras.head + be_api.auth.register, {
+        const res: AuthPostRes = await $fetch(be_paras.head + be_api.auth.register, {
             method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: {
-                user_name: value.email,
+                email: value.email,
                 password: value.password
             }
         })
+        console.log(res.email)
     } catch (err) {
         console.error('Error: ', err)
     }
