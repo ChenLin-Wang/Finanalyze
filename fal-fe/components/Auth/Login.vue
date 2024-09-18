@@ -1,3 +1,10 @@
+<script setup lang="ts">
+import { Paths } from '~/shared/paths';
+
+const visible = ref(false)
+
+</script>
+
 <template>
     <div>
         <v-card class="mx-auto pa-12 pb-8" elevation="8" max-width="448" rounded="lg">
@@ -31,18 +38,10 @@
             </v-btn>
 
             <v-card-text class="text-center">
-                <a class="text-blue text-decoration-none" href="#" rel="noopener noreferrer" target="_blank">
+                <v-btn class="text-blue" @click="useRouter().push(Paths.register)">
                     Sign up now <v-icon icon="mdi-chevron-right"></v-icon>
-                </a>
+                </v-btn>
             </v-card-text>
         </v-card>
     </div>
 </template>
-
-<script>
-export default {
-    data: () => ({
-        visible: false,
-    }),
-}
-</script>
