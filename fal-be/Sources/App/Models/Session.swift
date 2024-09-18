@@ -12,7 +12,7 @@ import Vapor
 import Fluent
 import SQLKit
 
-final class Session: Model, @unchecked Sendable {
+final class Session: DModel, @unchecked Sendable {
     static let schema = TableNames.sessions
 
     static let T: [FieldType] = [
@@ -28,13 +28,22 @@ final class Session: Model, @unchecked Sendable {
     @Field(key: T[2].0)                             var sessionToken: String
     @Timestamp(key: T[3].0, on: .none, 
     format: .iso8601(withMilliseconds: true))       var expiresAt: Date?
-    @Timestamp(key: T[4].0, on: .create, 
+    @Timestamp(key: T[4].0, on: .none, 
     format: .iso8601(withMilliseconds: true))       var createdAt: Date?
+
+    typealias DTO = REQ
+
+    struct REQ: Content, Sendable {
+        let user: User
+        let sessionToken: String
+    }
+
+    @Sendable func dto(req: Request) -> DTO { DTO(user: self.user, sessionToken: self.sessionToken) }
 
     init() {}
 
-    init(id: UUID? = nil, userId: UUID, sessionToken: String) {
-        self.id = id
+    init(userId: UUID, sessionToken: String) {
+        self.id = nil
         self.$user.id = userId
         self.sessionToken = sessionToken
         self.createdAt = .now

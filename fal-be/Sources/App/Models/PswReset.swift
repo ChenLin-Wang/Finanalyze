@@ -12,27 +12,38 @@ import Vapor
 import Fluent
 import SQLKit
 
-final class PswReset: Model, @unchecked Sendable {
+final class PswReset: DModel, @unchecked Sendable {
     static let schema = TableNames.pswReset
 
     static let T: [FieldType] = [
         ("id", .uuid, [.required], true),
         ("user_id", User.T[0].1, [.required, .references(User.schema, User.T[0].0)], false),
         ("reset_token", .string, [.required], false),
-        ("expires_at", .date, [.required], false),
-        ("created_at", .date, [.required, Def(SQLFunction("NOW"))], false)
+        ("expires_at", .string, [.required], false),
+        ("created_at", .string, [.required], false)
     ]
 
-    @ID(key: .id)                   var id: UUID?
-    @Parent(key: T[1].0)            var user: User
-    @Field(key: T[2].0)             var resetToken: String
-    @Field(key: T[3].0)             var expiresAt: Date?
-    @Field(key: T[4].0)             var createdAt: Date?
+    @ID(key: .id)                                   var id: UUID?
+    @Parent(key: T[1].0)                            var user: User
+    @Field(key: T[2].0)                             var resetToken: String
+    @Timestamp(key: T[3].0, on: .none, 
+    format: .iso8601(withMilliseconds: true))       var expiresAt: Date?
+    @Timestamp(key: T[4].0, on: .none, 
+    format: .iso8601(withMilliseconds: true))       var createdAt: Date?
+
+    typealias DTO = REQ
+
+    struct REQ: Content, Sendable {
+        let user: User
+        let resetToken: String
+    }
+
+    @Sendable func dto(req: Request) -> DTO { DTO(user: self.user, resetToken: self.resetToken) }
 
     init() {}
 
-    init(id: UUID? = nil, userId: UUID, resetToken: String) {
-        self.id = id
+    init(userId: UUID, resetToken: String) {
+        self.id = nil
         self.$user.id = userId
         self.resetToken = resetToken
         self.createdAt = .now
