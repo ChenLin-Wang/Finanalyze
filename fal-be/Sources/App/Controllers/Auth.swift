@@ -4,8 +4,10 @@ import Fluent
 struct AuthC: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         routes.post("register", use: create)
-        let protected = routes.grouped(User.authenticator())
-        protected.post("login", use: login)
+        let basicProtected = routes.grouped(User.authenticator())
+        basicProtected.post("login", use: login)
+        let tokenProtected = routes.grouped(Token.authenticator())
+        tokenProtected.get("me", use: me)
     }
 
     @Sendable func create(req: Request) async throws -> User {
@@ -19,7 +21,12 @@ struct AuthC: RouteCollection {
     @Sendable func login(req: Request) async throws -> Token {
         let user = try req.auth.require(User.self)
         let token = try user.generateToken()
+        try await Token.query(on: req.db).filter(\.$user.$id == user.requireID()).delete()
         try await token.save(on: req.db)
         return token
+    }
+
+    @Sendable func me(req: Request) async throws -> User {
+        try req.auth.require(User.self)
     }
 }

@@ -54,6 +54,13 @@ final class Token: DModel, @unchecked Sendable {
     struct MIG: DMigration, @unchecked Sendable { typealias MOD = Token }
 }
 
+extension Token: ModelTokenAuthenticatable {
+    static let valueKey = \Token.$token
+    static let userKey = \Token.$user
+
+    var isValid: Bool { return true }
+}
+
 extension User {
     func generateToken() throws -> Token {
         let t = try Token(
