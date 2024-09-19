@@ -4,8 +4,8 @@ import Vapor
 
 final class TableNames {
     static let users = "users"
-    static let pswReset = "password_reset"
-    static let sessions = "sessions"
+    static let pswReset = "password_resets"
+    static let tokens = "tokens"
 }
 
 typealias FieldType = (FieldKey, DatabaseSchema.DataType, [DatabaseSchema.FieldConstraint], Bool)
@@ -46,12 +46,12 @@ protocol DModel: Model, AsyncResponseEncodable, Sendable {
     associatedtype DTO: Content & Sendable
     associatedtype MIG: DMigration
     static var T: [FieldType] {get}
-    @Sendable func dto(req: Request) -> DTO
+    @Sendable func dto(req: Request) async throws -> DTO
 }
 
 extension DModel {
     @Sendable public func encodeResponse(for request: Request) async throws -> Response {
-        let dto = self.dto(req: request)
+        let dto = try await self.dto(req: request)
         return try await dto.encodeResponse(for: request)
     }
 }

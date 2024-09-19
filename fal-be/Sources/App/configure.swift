@@ -37,8 +37,7 @@ public func configure(_ app: Application) async throws {
 
     app.migrations.add(User.MIG())
     app.migrations.add(PswReset.MIG())
-    app.migrations.add(Session.MIG())
-    // app.migrations.add(SessionRecord.migration)
+    app.migrations.add(Token.MIG())
     
     // app.logger.logLevel = .debug
     try await app.autoMigrate()

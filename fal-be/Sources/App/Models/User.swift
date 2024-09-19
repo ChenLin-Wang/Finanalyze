@@ -85,6 +85,6 @@ extension User: ModelAuthenticatable {
     static let passwordHashKey = \User.$passwordHash
 
     func verify(password: String) throws -> Bool {
-        return try Bcrypt.verify(password, created: self.passwordHash)
+        try Bcrypt.verify(password, created: self.passwordHash)
     }
 }

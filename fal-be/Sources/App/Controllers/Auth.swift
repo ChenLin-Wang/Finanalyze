@@ -5,9 +5,7 @@ struct AuthC: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         routes.post("register", use: create)
         let protected = routes.grouped(User.authenticator())
-        protected.post("login") { req -> User in
-            try req.auth.require(User.self)
-        }
+        protected.post("login", use: login)
     }
 
     @Sendable func create(req: Request) async throws -> User {
@@ -18,10 +16,10 @@ struct AuthC: RouteCollection {
         return user
     }
 
-    // @Sendable func authenticate(req: Request) async throws -> Session {
-        
-
-
-    //     return Session()
-    // }
+    @Sendable func login(req: Request) async throws -> Token {
+        let user = try req.auth.require(User.self)
+        let token = try user.generateToken()
+        try await token.save(on: req.db)
+        return token
+    }
 }
