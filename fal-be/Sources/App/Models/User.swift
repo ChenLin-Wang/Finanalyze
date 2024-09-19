@@ -51,12 +51,11 @@ final class User: DModel, @unchecked Sendable {
     }
 
     struct DTO: Content, Sendable {
-        let id: UUID?
         let email: String
         let username: String?
     }
 
-    @Sendable func dto(req: Request) -> DTO { DTO(id: self.id, email: self.email, username: self.username) }
+    @Sendable func dto(req: Request) -> DTO { DTO(email: self.email, username: self.username) }
 
     init() {}
 

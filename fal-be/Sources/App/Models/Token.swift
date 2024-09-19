@@ -36,17 +36,10 @@ final class Token: DModel, @unchecked Sendable {
     }
 
     struct DTO: Content, Sendable {
-        let user: User
         let token: String
     }
 
-    @Sendable func dto(req: Request) async throws -> DTO { 
-        print(self.$user.id)
-        try await self.$user.load(on: req.db)
-        let d = DTO(user: self.user, token: self.token) 
-        print("DTO INIT ")
-        return d
-    }
+    @Sendable func dto(req: Request) -> DTO {  DTO(token: self.token)  }
 
     init() {}
 
