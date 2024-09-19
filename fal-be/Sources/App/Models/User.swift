@@ -68,4 +68,23 @@ final class User: DModel, @unchecked Sendable {
         self.createdAt = nil
         self.updatedAt = nil
     }
+
+    struct MIG: DMigration, @unchecked Sendable { typealias MOD = User }
+
+}
+
+extension User.DTO: Validatable {
+    static func validations(_ validations: inout Validations) {
+        validations.add("email", as: String.self, is: .email)
+        validations.add("password", as: String.self, is: .count(8...))
+    }
+}
+
+extension User: ModelAuthenticatable {
+    static let usernameKey = \User.$email
+    static let passwordHashKey = \User.$passwordHash
+
+    func verify(password: String) throws -> Bool {
+        return try Bcrypt.verify(password, created: self.passwordHash)
+    }
 }

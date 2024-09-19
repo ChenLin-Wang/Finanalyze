@@ -49,4 +49,6 @@ final class PswReset: DModel, @unchecked Sendable {
         self.createdAt = .now
         self.expiresAt = self.createdAt?.addingTimeInterval(10080)  // 7 days
     }
+
+    struct MIG: DMigration, @unchecked Sendable { typealias MOD = PswReset }
 }

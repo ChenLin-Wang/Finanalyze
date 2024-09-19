@@ -44,6 +44,8 @@ func TableCreate(_ name: String, database: Database, types: [FieldType]) -> Even
 protocol DModel: Model, AsyncResponseEncodable, Sendable {
     associatedtype REQ: Content & Sendable
     associatedtype DTO: Content & Sendable
+    associatedtype MIG: DMigration
+    static var T: [FieldType] {get}
     @Sendable func dto(req: Request) -> DTO
 }
 
@@ -51,5 +53,19 @@ extension DModel {
     @Sendable public func encodeResponse(for request: Request) async throws -> Response {
         let dto = self.dto(req: request)
         return try await dto.encodeResponse(for: request)
+    }
+}
+
+protocol DMigration: Migration, Sendable {
+    associatedtype MOD: DModel
+}
+
+extension DMigration {
+    func prepare(on database: Database) -> EventLoopFuture<Void> {
+        TableCreate(MOD.schema, database: database, types: MOD.T)
+    }
+
+    func revert(on database: Database) -> EventLoopFuture<Void> {
+        database.schema(MOD.schema).delete()
     }
 }

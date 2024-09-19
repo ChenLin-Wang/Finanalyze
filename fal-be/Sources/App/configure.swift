@@ -32,9 +32,14 @@ public func configure(_ app: Application) async throws {
     
     app.middleware.use(cors)
     app.middleware.use(error)
-    app.migrations.add(CreateUser())
-    app.migrations.add(CreatePwdReset())
-    app.migrations.add(CreateSession())
+
+    app.sessions.use(.fluent)
+
+    app.migrations.add(User.MIG())
+    app.migrations.add(PswReset.MIG())
+    app.migrations.add(Session.MIG())
+    // app.migrations.add(SessionRecord.migration)
+    
     // app.logger.logLevel = .debug
     try await app.autoMigrate()
     try routes(app)

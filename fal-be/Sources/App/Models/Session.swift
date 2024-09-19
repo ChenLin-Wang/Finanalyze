@@ -31,9 +31,11 @@ final class Session: DModel, @unchecked Sendable {
     @Timestamp(key: T[4].0, on: .none, 
     format: .iso8601(withMilliseconds: true))       var createdAt: Date?
 
-    typealias DTO = REQ
-
     struct REQ: Content, Sendable {
+        let user: User
+    }
+
+    struct DTO: Content, Sendable {
         let user: User
         let sessionToken: String
     }
@@ -49,4 +51,6 @@ final class Session: DModel, @unchecked Sendable {
         self.createdAt = .now
         self.expiresAt = self.createdAt?.addingTimeInterval(10080)  // 7 days
     }
+
+    struct MIG: DMigration, @unchecked Sendable { typealias MOD = Session }
 }
