@@ -11,7 +11,7 @@ struct UserSpace: RouteCollection {
     
     @Sendable func getInfos(req: Request) async throws -> UserInfo {
         try req.auth.require(User.self)
-        let reqData = try req.content.decode(UserInfo.REQ.self)
+        let reqData = try req.query.decode(UserInfo.REQ.self)
         guard let infos = try await UserInfo.query(on: req.db).filter(\.$user.$id == reqData.userId).first() else {
             throw Abort(.notFound, reason: "User not found")
         }

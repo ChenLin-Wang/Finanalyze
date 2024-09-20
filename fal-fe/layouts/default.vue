@@ -1,9 +1,15 @@
 <script setup lang="ts">
+import { be, BearerFetch, type InfoGetRes } from '~/shared/backend';
+import { globalKeys } from '~/shared/paths';
 
 const loading = ref(true)
+const userInfos = ref<InfoGetRes|null>(null)
+provide(globalKeys.userInfosKey, userInfos)
 
 onMounted(async () => {
-    
+    loading.value = true
+    userInfos.value = await BearerFetch(be.head + be.api.dashboard.info + '?userId=' + localStorage.getItem(be.userIdKey)) as InfoGetRes
+    loading.value = false
 })
 
 </script>

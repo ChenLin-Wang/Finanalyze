@@ -4,3 +4,7 @@ export const Paths = {
     register: "/register",
     dashboard: "/dashboard"
 }
+
+export const globalKeys = {
+    userInfosKey: "userInfos"
+}

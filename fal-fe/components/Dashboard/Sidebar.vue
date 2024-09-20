@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import type { InfoGetRes } from '~/shared/backend';
+import { globalKeys } from '~/shared/paths';
+
 
 const items = ref([
     {
@@ -31,6 +34,9 @@ const items = ref([
         icon: "mdi-cog"
     }
 ])
+
+const userInfos = ref(inject(globalKeys.userInfosKey) as InfoGetRes)
+
 </script>
 
 <template>
@@ -38,8 +44,8 @@ const items = ref([
         <v-layout>
             <v-navigation-drawer permanent style="margin-top: 64px;" class="text-black">
                 <v-list>
-                    <v-list-item prepend-avatar="https://cdn.vuetifyjs.com/images/john.png" subtitle="john@google.com"
-                        title="John Leider">
+                    <v-list-item prepend-avatar="https://cdn.vuetifyjs.com/images/john.png" :subtitle="userInfos.user.email"
+                        :title="userInfos.user.username">
                         <template v-slot:append>
                             <v-btn icon="mdi-menu-down" size="small" variant="text"></v-btn>
                         </template>

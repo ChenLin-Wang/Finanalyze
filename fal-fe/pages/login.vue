@@ -16,6 +16,7 @@ const login = async (value: UserLoginData) => {
             }
         })
         localStorage.setItem(be.tokenKey, res.token)
+        localStorage.setItem(be.userIdKey, res.user.id)
         useRouter().push(Paths.dashboard)
     } catch (err) {
         console.error('Error: ', err)

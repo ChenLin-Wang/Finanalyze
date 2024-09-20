@@ -16,7 +16,7 @@ struct AuthC: RouteCollection {
 
         let infos = try UserInfo(userId: user.requireID())
         try await infos.save(on: req.db)
-
+        
         return user
     }
 

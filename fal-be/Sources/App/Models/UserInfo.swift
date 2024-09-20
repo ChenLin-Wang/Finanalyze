@@ -50,7 +50,7 @@ final class UserInfo: DModel, @unchecked Sendable {
     }
     
     struct DTO: Content, Sendable {
-        var user: User; var firstName: String; var middleName: String?; var lastName: String
+        var user: User.DTO; var firstName: String; var middleName: String?; var lastName: String
         var avatar: String?; var age: Int?; var gender: Gender; var birthday: Date?
         var address: String?; var phoneNum: String?; var course: String?
         var yearLvl: String?; var school: String?
@@ -59,8 +59,8 @@ final class UserInfo: DModel, @unchecked Sendable {
     @Sendable func dto(req: Request) async throws -> DTO { 
         try await self.$user.load(on: req.db)
         guard let gender = Gender(rawValue: self.gender) else { throw Abort(.badRequest, reason: "Wrong gender value") }
-        return DTO(
-            user: self.user, firstName: self.firstName, middleName: self.middleName, 
+        return try DTO(
+            user: self.user.dto(req: req), firstName: self.firstName, middleName: self.middleName, 
             lastName: self.lastName, avatar: self.avatar, age: self.age, 
             gender: gender, birthday: self.birthday, 
             address: self.address, phoneNum: self.phoneNum, course: self.course, 

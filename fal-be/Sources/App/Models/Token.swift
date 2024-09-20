@@ -33,9 +33,15 @@ final class Token: DModel, @unchecked Sendable {
 
     typealias NEW = REQ
     struct REQ: Content, Sendable { let user: User }
-    struct DTO: Content, Sendable { let token: String }
+    struct DTO: Content, Sendable { 
+        let user: User.DTO
+        let token: String 
+    }
 
-    @Sendable func dto(req: Request) -> DTO {  DTO(token: self.token)  }
+    @Sendable func dto(req: Request) async throws -> DTO {  
+        try await self.$user.load(on: req.db)
+        return try DTO(user:self.user.dto(req: req), token: self.token)  
+    }
 
     init() {}
 
