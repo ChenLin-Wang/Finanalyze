@@ -32,6 +32,7 @@ final class PswReset: DModel, @unchecked Sendable {
     format: .iso8601(withMilliseconds: true))       var createdAt: Date?
 
     typealias DTO = REQ
+    typealias NEW = REQ
 
     struct REQ: Content, Sendable {
         let user: User

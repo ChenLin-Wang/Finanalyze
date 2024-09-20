@@ -31,13 +31,9 @@ final class Token: DModel, @unchecked Sendable {
     @Timestamp(key: T[4].0, on: .none, 
     format: .iso8601(withMilliseconds: true))       var createdAt: Date?
 
-    struct REQ: Content, Sendable {
-        let user: User
-    }
-
-    struct DTO: Content, Sendable {
-        let token: String
-    }
+    typealias NEW = REQ
+    struct REQ: Content, Sendable { let user: User }
+    struct DTO: Content, Sendable { let token: String }
 
     @Sendable func dto(req: Request) -> DTO {  DTO(token: self.token)  }
 

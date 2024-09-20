@@ -6,6 +6,7 @@ final class TableNames {
     static let users = "users"
     static let pswReset = "password_resets"
     static let tokens = "tokens"
+    static let userInfos = "user_infos"
 }
 
 typealias FieldType = (FieldKey, DatabaseSchema.DataType, [DatabaseSchema.FieldConstraint], Bool)
@@ -35,6 +36,7 @@ func TableCreate(_ name: String, database: Database, types: [FieldType]) -> Even
 }
 
 protocol DModel: Model, AsyncResponseEncodable, Sendable {
+    associatedtype NEW: Content & Sendable
     associatedtype REQ: Content & Sendable
     associatedtype DTO: Content & Sendable
     associatedtype MIG: DMigration

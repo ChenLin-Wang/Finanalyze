@@ -45,9 +45,13 @@ final class User: DModel, @unchecked Sendable {
     @Timestamp(key: T[7].0, on: .update, 
     format: .iso8601(withMilliseconds: true))                   var updatedAt: Date?
 
-    struct REQ: Content, Sendable {
+    struct NEW: Content, Sendable {
         let email: String
         let password: String
+    }
+
+    struct REQ: Content, Sendable {
+        let userId: User.IDValue
     }
 
     struct DTO: Content, Sendable {
@@ -58,6 +62,8 @@ final class User: DModel, @unchecked Sendable {
     @Sendable func dto(req: Request) -> DTO { DTO(email: self.email, username: self.username) }
 
     init() {}
+
+    convenience init(data: NEW) throws { self.init(email: data.email, passwordHash: try Bcrypt.hash(data.password)) }
 
     init(email: String, passwordHash: String) {
         self.id = nil

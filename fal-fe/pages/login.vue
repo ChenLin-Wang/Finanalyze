@@ -3,9 +3,7 @@ import type { UserLoginData } from '~/components/Auth/Login.vue';
 import { be, type LoginPostRes } from '~/shared/backend';
 import { Paths } from '~/shared/paths';
 
-definePageMeta({
-    layout: 'plain'
-})
+definePageMeta({ layout: 'plain' })
 
 const login = async (value: UserLoginData) => {
     console.log(btoa(`${value.email}:${value.password}`))

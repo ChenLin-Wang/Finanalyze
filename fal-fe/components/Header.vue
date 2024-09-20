@@ -10,7 +10,7 @@ const props = withDefaults(defineProps<{
 
 <template>
     <v-layout>
-        <v-app-bar color="black" :elevation="4">
+        <v-app-bar color="black" :elevation="0">
             <Logo class="mx-3"></Logo>
             <v-spacer></v-spacer>   
             <v-btn v-if="showButton" rounded="t-xl" class="bg-white" icon="mdi-login-variant" @click="useRouter().push(Paths.login)"></v-btn>

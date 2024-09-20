@@ -10,9 +10,13 @@ struct AuthC: RouteCollection {
 
     @Sendable func create(req: Request) async throws -> User {
         try User.DTO.validate(content: req)
-        let userReq = try req.content.decode(User.REQ.self)
-        let user = try User(email: userReq.email, passwordHash: Bcrypt.hash(userReq.password))
+        let userDatas = try req.content.decode(User.NEW.self)
+        let user = try User(data: userDatas)
         try await user.save(on: req.db)
+
+        let infos = try UserInfo(userId: user.requireID())
+        try await infos.save(on: req.db)
+
         return user
     }
 

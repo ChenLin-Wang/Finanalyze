@@ -1,3 +1,10 @@
+<script setup>
+import { Fonts } from '../shared/fonts'
+const setCSSVariables = () => document.documentElement.style.setProperty('--brand-title', Fonts.BrandTitle)
+onMounted(setCSSVariables)
+definePageMeta({ layout: 'whole' })
+</script>
+
 <template>
     <v-container class="text-white" style="height: 100vh;">
         <v-row align="center" class="text-center fill-height" justify="center">
@@ -8,12 +15,6 @@
         </v-row>
     </v-container>
 </template>
-
-<script setup>
-import { Fonts } from '../shared/fonts'
-const setCSSVariables = () => document.documentElement.style.setProperty('--brand-title', Fonts.BrandTitle)
-onMounted(setCSSVariables)
-</script>
 
 <style lang="css" scoped>
 .web-title {
