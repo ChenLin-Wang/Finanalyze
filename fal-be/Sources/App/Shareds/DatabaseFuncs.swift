@@ -30,14 +30,7 @@ func TableCreate(_ name: String, database: Database, types: [FieldType]) -> Even
             default: print("<\(name) - \(t.0)>: Too much field constraints")
         }
     }
-    switch(uniques.count) {
-        case 0: break
-        case 1: s = s.unique(on: uniques[0])
-        case 2: s = s.unique(on: uniques[0], uniques[1])
-        case 3: s = s.unique(on: uniques[0], uniques[1], uniques[2])
-        case 4: s = s.unique(on: uniques[0], uniques[1], uniques[2], uniques[3])
-        default: print("<\(name)>: Too much db unique field constraints")
-    }
+    for unique in uniques { s = s.unique(on: unique) }
     return s.create()
 }
 

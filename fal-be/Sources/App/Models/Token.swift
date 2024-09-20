@@ -17,7 +17,7 @@ final class Token: DModel, @unchecked Sendable {
 
     static let T: [FieldType] = [
         ("id", .uuid, [.required], true),
-        ("user_id", User.T[0].1, [.required, .references(User.schema, User.T[0].0)], false),
+        ("user_id", User.T[0].1, [.required, .references(User.schema, User.T[0].0)], true),
         ("token", .string, [.required], true),
         ("expires_at", .string, [.required], false),
         ("created_at", .string, [.required], false)

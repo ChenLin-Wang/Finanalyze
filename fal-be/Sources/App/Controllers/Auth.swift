@@ -6,8 +6,6 @@ struct AuthC: RouteCollection {
         routes.post("register", use: create)
         let basicProtected = routes.grouped(User.authenticator())
         basicProtected.post("login", use: login)
-        let tokenProtected = routes.grouped(Token.authenticator())
-        tokenProtected.get("me", use: me)
     }
 
     @Sendable func create(req: Request) async throws -> User {
@@ -24,9 +22,5 @@ struct AuthC: RouteCollection {
         try await Token.query(on: req.db).filter(\.$user.$id == user.requireID()).delete()
         try await token.save(on: req.db)
         return token
-    }
-
-    @Sendable func me(req: Request) async throws -> User {
-        try req.auth.require(User.self)
     }
 }
