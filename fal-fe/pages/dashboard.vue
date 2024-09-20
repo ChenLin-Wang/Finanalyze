@@ -1,9 +1,17 @@
 <script setup lang="ts">
 definePageMeta({
-    layout: 'sidebar'
+    layout: false
 })
 </script>
 
 <template>
-    <p>Dashboard content</p>
+    <NuxtLayout name="sidebar">
+        <template #sidebar>
+            <DashboardSidebar></DashboardSidebar>
+        </template>
+
+        <template #default>
+            <DashboardContent></DashboardContent>
+        </template>
+    </NuxtLayout>
 </template>

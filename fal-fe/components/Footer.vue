@@ -1,3 +1,3 @@
 <template>
-    <h1 class="bg-blue">Footer</h1>
+    <h1>Footer</h1>
 </template>

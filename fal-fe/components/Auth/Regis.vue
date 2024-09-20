@@ -1,6 +1,38 @@
+<script setup lang="ts">
+import type { VForm } from 'vuetify/components';
+import { Paths } from '~/shared/paths';
+
+const email = ref('')
+const password = ref('')
+const confirmPassword = ref('')
+const passwordVisible = ref(false)
+const confirmPasswordVisible = ref(false)
+const emailRules = ref([
+    (v: string) => !!v || 'Email is required',
+    (v: string) => /.+@.+\..+/.test(v) || 'Email must be valid',
+])
+const passwordRules = ref([
+    (v: string) => !!v || 'Password is required',
+    (v: string) => v.length >= 6 || 'Password must be at least 6 characters',
+])
+const confirmPasswordRules = ref([
+    (v: string) => !!v || 'Please confirm your password',
+    (v: string) => v === password.value || 'Passwords must match',
+])
+
+export type UserRegisData = { email: string, password: string }
+const emit = defineEmits<{ (e: "submit", data: UserRegisData): void }>()
+const regForm = ref<VForm | null>(null);
+const register = async () => {
+    if (regForm.value == undefined || !(await regForm.value.validate()).valid) return
+    emit('submit', { email: email.value, password: password.value });
+}
+</script>
+
+
 <template>
     <v-card class="mx-auto pa-12 pb-8" elevation="8" max-width="448" rounded="lg">
-        <v-form ref="form">
+        <v-form ref="regForm">
             <div class="text-subtitle-1 text-medium-emphasis">Create an Account</div>
 
             <v-text-field density="compact" placeholder="Email address" prepend-inner-icon="mdi-email-outline"
@@ -40,37 +72,3 @@
         </v-form>
     </v-card>
 </template>
-
-<script setup lang="ts">
-import type { VForm } from 'vuetify/components';
-import { Paths } from '~/shared/paths';
-
-const email = ref('')
-const password = ref('')
-const confirmPassword = ref('')
-const passwordVisible = ref(false)
-const confirmPasswordVisible = ref(false)
-const emailRules = ref([
-    (v: string) => !!v || 'Email is required',
-    (v: string) => /.+@.+\..+/.test(v) || 'Email must be valid',
-])
-const passwordRules = ref([
-    (v: string) => !!v || 'Password is required',
-    (v: string) => v.length >= 6 || 'Password must be at least 6 characters',
-])
-const confirmPasswordRules = ref([
-    (v: string) => !!v || 'Please confirm your password',
-    (v: string) => v === password.value || 'Passwords must match',
-])
-
-export type UserRegisData = { email: string, password: string }
-const emit = defineEmits<{ (e: "submit", data: UserRegisData): void }>()
-const form = ref<VForm | null>(null);
-const register = async () => {
-    if (form.value == undefined) return;
-    const { valid } = await form.value?.validate()
-    if (valid) {
-        emit('submit', { email: email.value, password: password.value });
-    }
-}
-</script>

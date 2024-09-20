@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { UserRegisData } from '~/components/Auth/Regis.vue';
-import { be_api, be_paras, type AuthPostRes } from '~/shared/be_conf';
+import { be, type RegisPostRes, type LoginPostRes } from '~/shared/backend';
+import { Paths } from '~/shared/paths';
 
 definePageMeta({ layout: 'plain' })
 
 const regis = async (value: UserRegisData) => {
     try {
-        const res: AuthPostRes = await $fetch(be_paras.head + be_api.auth.register, {
+        const res: RegisPostRes = await $fetch(be.head + be.api.auth.register, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -16,7 +17,7 @@ const regis = async (value: UserRegisData) => {
                 password: value.password
             }
         })
-        console.log(res.email)
+        useRouter().push(Paths.login);
     } catch (err) {
         console.error('Error: ', err)
     }
