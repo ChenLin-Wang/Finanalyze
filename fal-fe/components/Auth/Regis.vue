@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { VForm } from 'vuetify/components';
 import { Paths } from '~/shared/paths';
-
+const props = withDefaults(defineProps<{ loading?: boolean }>(), { loading: false })
 const email = ref('')
 const password = ref('')
 const confirmPassword = ref('')
@@ -32,7 +32,7 @@ const register = async () => {
 
 <template>
     <v-card class="mx-auto pa-12 pb-8" elevation="8" max-width="448" rounded="lg">
-        <v-form ref="regForm">
+        <v-form v-if="!loading" ref="regForm">
             <div class="text-subtitle-1 text-medium-emphasis">Create an Account</div>
 
             <v-text-field density="compact" placeholder="Email address" prepend-inner-icon="mdi-email-outline"
@@ -70,5 +70,8 @@ const register = async () => {
                 </v-btn>
             </v-card-text>
         </v-form>
+        <v-skeleton-loader v-else color="white" elevation="0" rounded="lg"
+                    class="py-0 ma-0 fill-height" type="list-item-three-line, divider, list-item-two-line, divider, list-item-two-line, list-item, divider, list-item, divider, article, chip"
+                    style="display: block; " />
     </v-card>
 </template>

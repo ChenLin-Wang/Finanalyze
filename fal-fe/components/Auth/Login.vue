@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { VForm } from 'vuetify/components';
 import { Paths } from '~/shared/paths';
+const props = withDefaults(defineProps<{ loading?: boolean }>(), { loading: false })
 const email = ref("")
 const password = ref("")
 const emailRules = ref([
@@ -22,8 +23,8 @@ const login = async () => {
 </script>
 
 <template>
-    <v-card class="mx-auto pa-12 pb-8" elevation="8" max-width="448" rounded="lg">
-        <v-form ref="form">
+    <v-card class="mx-auto pa-12" elevation="8" max-width="448" rounded="lg">
+        <v-form ref="form" v-if="!loading">
             <div class="text-subtitle-1 text-medium-emphasis">Account</div>
 
             <v-text-field density="compact" placeholder="Email address" prepend-inner-icon="mdi-email-outline"
@@ -59,5 +60,8 @@ const login = async () => {
                 </v-btn>
             </v-card-text>
         </v-form>
+        <v-skeleton-loader v-else color="white" elevation="0" rounded="lg"
+                    class="py-0 ma-0 fill-height" type="list-item-three-line, divider, list-item-two-line, divider, list-item-three-line, divider, list-item, divider, article, chip"
+                    style="display: block; " />
     </v-card>
 </template>

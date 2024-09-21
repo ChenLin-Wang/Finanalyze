@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import type { UserLoginData } from '~/components/Auth/Login.vue';
-import { be, type LoginPostRes } from '~/shared/backend';
+import { be, type LoginPostRes, type ResError } from '~/shared/backend';
+import { delay } from '~/shared/funcs';
 import { Paths } from '~/shared/paths';
 
 definePageMeta({ layout: 'plain' })
 
+const info = ref<ResError | string | null>(null)
+const alertType = ref<"error" | "success" | "info" | "warning">("error")
+const alertTitle = ref<string>("Login Failed")
+const loading = ref(false)
+
 const login = async (value: UserLoginData) => {
-    console.log(btoa(`${value.email}:${value.password}`))
+    loading.value = true
     try {
         const res: LoginPostRes = await $fetch(be.head + be.api.auth.login, {
             method: 'POST',
@@ -15,21 +21,29 @@ const login = async (value: UserLoginData) => {
                 "Authorization": "Basic " + btoa(`${value.email}:${value.password}`)
             }
         })
+        alertTitle.value = "Login Success!"
+        alertType.value = "success"
+        info.value = "Jumping to Dashboard..."
+        await delay(3000)
         localStorage.setItem(be.tokenKey, res.token)
         localStorage.setItem(be.userIdKey, res.user.id)
         useRouter().push(Paths.dashboard)
-    } catch (err) {
-        console.error('Error: ', err)
+    } catch (error) {
+        alertTitle.value = "Login Failed"
+        alertType.value = "error"
+        info.value = error as ResError
+    } finally {
+        loading.value = false
     }
 }
-
 </script>
 
 <template>
     <v-container fluid class="ma-0 pa-0">
-        <v-row class="ma-0 pa-0" style="min-height: 100vh;" align="center" justify="center"> 
+        <Alert :type="alertType" :title="alertTitle" v-model:info="info" />
+        <v-row class="ma-0 pa-0" style="min-height: 100vh;" align="center" justify="center">
             <v-col>
-                <AuthLogin class="ma-5" @login="login"></AuthLogin>
+                <AuthLogin class="ma-5" :loading="loading" @login="login" />
             </v-col>
         </v-row>
     </v-container>

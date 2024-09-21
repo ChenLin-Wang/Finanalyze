@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { InfoGetRes } from '~/shared/backend';
-import { globalKeys } from '~/shared/paths';
-
+import { globalKeys, Paths } from '~/shared/paths';
 
 const items = ref([
     {
@@ -37,6 +36,11 @@ const items = ref([
 
 const userInfos = ref(inject(globalKeys.userInfosKey) as InfoGetRes)
 
+const logOut = () => {
+    localStorage.clear()
+    useRouter().push(Paths.home)
+}
+
 </script>
 
 <template>
@@ -46,9 +50,6 @@ const userInfos = ref(inject(globalKeys.userInfosKey) as InfoGetRes)
                 <v-list>
                     <v-list-item prepend-avatar="https://cdn.vuetifyjs.com/images/john.png" :subtitle="userInfos.user.email"
                         :title="userInfos.user.username">
-                        <template v-slot:append>
-                            <v-btn icon="mdi-menu-down" size="small" variant="text"></v-btn>
-                        </template>
                     </v-list-item>
                 </v-list>
                 <v-divider></v-divider>
@@ -60,6 +61,16 @@ const userInfos = ref(inject(globalKeys.userInfosKey) as InfoGetRes)
                         <v-list-item-title v-text="item.title"></v-list-item-title>
                     </v-list-item>
                 </v-list>
+                <v-divider></v-divider>
+                <v-list :lines="false" density="default" nav>
+                    <v-list-item value="logout" color="primary" @click="logOut">
+                        <template v-slot:prepend>
+                            <v-icon icon="mdi-logout-variant"></v-icon>
+                        </template>
+                        <v-list-item-title>Log out</v-list-item-title> 
+                    </v-list-item>
+                </v-list>
+                <v-divider></v-divider>
             </v-navigation-drawer>
         </v-layout>
     </v-container>

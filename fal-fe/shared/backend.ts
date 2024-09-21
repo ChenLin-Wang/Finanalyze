@@ -47,6 +47,18 @@ export type InfoGetRes = {
 
 }
 
+export type ResError = {
+    url: string,
+    statusCode: number,
+    statusMessage: string,
+    message: string,
+    description: string,
+    data: {
+        error: boolean,
+        reason: string
+    }
+}
+
 export const BearerFetch = async (url: string, options: any = {}) => {
     const config = useRuntimeConfig();
     options.headers = {
