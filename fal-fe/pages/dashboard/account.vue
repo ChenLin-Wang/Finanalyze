@@ -16,7 +16,7 @@ function toFormValue(info: InfoGetRes): FormValue {
         lastName: info.lastName,
         middleName: info.middleName,
         avatar: info.avatar,
-        age: info.age,
+        age: info.age === undefined ? undefined : +(info.age),
         gender: info.gender,
         _bday: info.birthday ? info.birthday.split('T')[0] : undefined,
         address: info.address,

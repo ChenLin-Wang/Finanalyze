@@ -8,8 +8,12 @@ export const strLenValidate = (len: number, label: string, less: boolean = true)
 }
 
 export const numValidate = (boundary: number, label: string, less: boolean = true, allowEmpty: boolean = false) => {
-    return allowEmpty ? (v?: number) => (v === null || v === undefined) ? true : (less ? v <= boundary : v >= boundary) || `${label} needs to be ${less ? 'smaller than' : 'larger than'} ${boundary}.` :
-        (v: number) => (less ? v <= boundary : v >= boundary) || `${label} needs to be ${less ? 'smaller than' : 'larger than'} ${boundary}.`
+    return (v?: number) => {
+        let val = v
+        if (typeof val === "string") val = undefined
+        return val === undefined ? (allowEmpty ? true : `${label} must not be empty.`) :
+        (less ? val > boundary : val < boundary) ? `${label} needs to be ${less ? 'smaller than' : 'larger than'} ${boundary}.` : true
+    }
 }
 
 export const digitLenValidate = (digitLen: number, label: string, less: boolean = false, allowEmpty: boolean = false) => {

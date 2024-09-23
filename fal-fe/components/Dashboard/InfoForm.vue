@@ -56,7 +56,7 @@ const hintGroups = [
     [["Middle Name", false, "middleName", "12", "string", false, []],],
 
     [["Gender", false, "gender", "12", "selector", false, [], [Gender.male, Gender.female, Gender.none]],],
-    [["Age", false, "age", "12", "number", false, [numValidate(120, "Age", true), numValidate(0, "Age", false)]],],
+    [["Age", false, "age", "12", "number", false, [numValidate(120, "Age", true, false), numValidate(0, "Age", false, false)]],],
     [["Birthday", false, "_bday", "12", "date", false, [], "bdayDate", [-3784320000, 0]],],
     [["Phone Number", false, "phoneNum", "12", "string", false, [digitLenValidate(7, "Phone Number", false, true), digitLenValidate(15, "Phone Number", true, true)]],],
     [["Address", false, "address", "12", "string", false, []],],
