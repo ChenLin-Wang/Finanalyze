@@ -6,7 +6,7 @@ final class UserInfo: DModel, @unchecked Sendable {
 
     static let schema = TableNames.userInfos
 
-    enum Gender: String, Codable { case male = "male", female = "female", none = "none"}
+    enum Gender: String, Codable { case male = "Male", female = "Female", none = "None"}
 
     static let T: [FieldType] = [
         ("id", .uuid, [.required], true),
@@ -15,13 +15,13 @@ final class UserInfo: DModel, @unchecked Sendable {
         ("middle_name", .string, [], false),
         ("last_name", .string, [.required], false),
         ("avatar", .string, [], false),
-        ("age", .int8, [], false),
+        ("age", .uint16, [], false),
         ("gender", .string, [.required], false),
         ("birthday", .date, [], false),
         ("address", .string, [], false),
         ("phone_number", .string, [], false),
         ("course", .string, [], false),
-        ("year_lvl", .int8, [], false),
+        ("year_lvl", .string, [], false),
         ("school", .string, [], false),
     ]
 
@@ -33,7 +33,8 @@ final class UserInfo: DModel, @unchecked Sendable {
     @Field(key: T[5].0)                             var avatar: String?
     @Field(key: T[6].0)                             var age: Int?
     @Field(key: T[7].0)                             var gender: String
-    @Timestamp(key: T[8].0, on: .none)              var birthday: Date?
+    @Timestamp(key: T[8].0, on: .none,
+    format: .default)                               var birthday: Date?
     @Field(key: T[9].0)                             var address: String?
     @Field(key: T[10].0)                            var phoneNum: String?
     @Field(key: T[11].0)                            var course: String?
@@ -44,9 +45,9 @@ final class UserInfo: DModel, @unchecked Sendable {
 
     struct NEW: Content, Sendable {
         var userId: User.IDValue; var firstName: String; var middleName: String?; var lastName: String
-        var avatar: String?; var age: Int?; var gender: String; var birthday: Date?
+        var avatar: String?; var age: Int?; var gender: String; var _bday: String?
         var address: String?; var phoneNum: String?; var course: String?
-        var yearLvl: String?; var school: String?
+        var yearLvl: String?; var school: String?;
     }
     
     struct DTO: Content, Sendable {
@@ -74,8 +75,8 @@ final class UserInfo: DModel, @unchecked Sendable {
         guard let gender = Gender(rawValue: data.gender) else { throw Abort(.badRequest, reason: "Wrong gender value") }
         self.init(
             userId: data.userId, firstName: data.firstName, lastName: data.lastName, middleName: data.middleName, 
-            avatar: data.avatar, age: data.age, gender: gender, birthday: data.birthday, address: data.address, 
-            phoneNum: data.phoneNum, course: data.course, yearLvl: data.yearLvl, school: data.school
+            avatar: data.avatar, age: data.age, gender: gender, birthday: data._bday != nil ? ShortDateFormatter().date(from: data._bday!) : nil, 
+            address: data.address, phoneNum: data.phoneNum, course: data.course, yearLvl: data.yearLvl, school: data.school
         )
     }
 

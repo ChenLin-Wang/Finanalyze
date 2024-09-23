@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { be, BearerFetch, type InfoGetRes } from '~/shared/backend';
+import { localClear } from '~/shared/funcs';
 import { globalKeys } from '~/shared/paths';
 
 const loading = ref(true)
@@ -8,8 +9,13 @@ provide(globalKeys.userInfosKey, userInfos)
 
 onMounted(async () => {
     loading.value = true
-    userInfos.value = await BearerFetch(be.head + be.api.dashboard.info + '?userId=' + localStorage.getItem(be.userIdKey)) as InfoGetRes
-    loading.value = false
+    try {
+        userInfos.value = await BearerFetch(be.head + be.api.dashboard.info + '?userId=' + localStorage.getItem(be.userIdKey)) as InfoGetRes
+    } catch (err) {
+        localClear()
+    } finally {
+        loading.value = false
+    }
 })
 
 </script>

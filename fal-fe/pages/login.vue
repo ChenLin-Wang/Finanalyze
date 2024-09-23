@@ -32,6 +32,7 @@ const login = async (value: UserLoginData) => {
         alertTitle.value = "Login Failed"
         alertType.value = "error"
         info.value = error as ResError
+        localClear()
     } finally {
         loading.value = false
     }

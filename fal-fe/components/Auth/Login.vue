@@ -1,17 +1,10 @@
 <script setup lang="ts">
 import type { VForm } from 'vuetify/components';
 import { Paths } from '~/shared/paths';
+import { emailValidate, requireValidate, strLenValidate } from '~/shared/validations';
 const props = withDefaults(defineProps<{ loading?: boolean }>(), { loading: false })
 const email = ref("")
 const password = ref("")
-const emailRules = ref([
-    (v: string) => !!v || 'Email is required',
-    (v: string) => /.+@.+\..+/.test(v) || 'Email must be valid',
-])
-const passwordRules = ref([
-    (v: string) => !!v || 'Password is required',
-    (v: string) => v.length >= 6 || 'Password must be at least 6 characters',
-])
 const visible = ref(false)
 const form = ref<VForm | null>(null)
 export type UserLoginData = { email: string, password: string }
@@ -28,7 +21,7 @@ const login = async () => {
             <div class="text-subtitle-1 text-medium-emphasis">Account</div>
 
             <v-text-field density="compact" placeholder="Email address" prepend-inner-icon="mdi-email-outline"
-                variant="outlined" v-model="email" :rules="emailRules"></v-text-field>
+                variant="outlined" v-model="email" :rules="[emailValidate('Email', false)]"></v-text-field>
 
             <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
                 Password
@@ -40,7 +33,7 @@ const login = async () => {
 
             <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
                 density="compact" placeholder="Enter your password" prepend-inner-icon="mdi-lock-outline"
-                variant="outlined" v-model="password" :rules="passwordRules" @click:append-inner="visible = !visible"></v-text-field>
+                variant="outlined" v-model="password" :rules="[requireValidate('string', 'Password'), strLenValidate(8, 'Password', false)]" @click:append-inner="visible = !visible"></v-text-field>
 
             <v-card class="mb-12" color="surface-variant" variant="tonal">
                 <v-card-text class="text-medium-emphasis text-caption">

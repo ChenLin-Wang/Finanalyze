@@ -44,7 +44,6 @@ export type InfoGetRes = {
     course?: string
     yearLvl?: string
     school?: string
-
 }
 
 export type ResError = {

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { InfoGetRes } from '~/shared/backend';
+import { localClear } from '~/shared/funcs';
 import { globalKeys, Paths } from '~/shared/paths';
 
 const items = ref([
@@ -37,7 +38,7 @@ const items = ref([
 const userInfos = ref(inject(globalKeys.userInfosKey) as InfoGetRes)
 
 const logOut = () => {
-    localStorage.clear()
+    localClear()
     useRouter().push(Paths.home)
 }
 

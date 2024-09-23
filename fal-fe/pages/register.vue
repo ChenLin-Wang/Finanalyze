@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { UserRegisData } from '~/components/Auth/Regis.vue';
 import { be, type RegisPostRes, type LoginPostRes, type ResError } from '~/shared/backend';
-import { delay } from '~/shared/funcs';
+import { delay, localClear } from '~/shared/funcs';
 import { Paths } from '~/shared/paths';
 
 definePageMeta({ layout: 'plain' })
@@ -33,6 +33,7 @@ const regis = async (value: UserRegisData) => {
         alertTitle.value = "Register Failed"
         alertType.value = "error"
         info.value = error as ResError
+        localClear()
     } finally {
         loading.value = false
     }
