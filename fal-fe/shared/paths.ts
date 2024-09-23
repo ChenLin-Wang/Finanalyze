@@ -6,5 +6,6 @@ export const Paths = {
 }
 
 export const globalKeys = {
-    userInfosKey: "userInfos"
+    userInfosKey: "user-infos-key",
+    dashboardAlertKey: "dashboard-alert-key"
 }

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { VForm } from 'vuetify/components';
-import type { InfoGetRes, UserBasic } from '~/shared/backend';
 import { deepCopy, deepEqual } from '~/shared/funcs';
 import { digitLenValidate, emailValidate, numValidate, requireValidate, strLenValidate } from '~/shared/validations';
 

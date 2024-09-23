@@ -5,24 +5,32 @@ import { globalKeys, Paths } from '~/shared/paths';
 
 const loading = ref(true)
 
-const info = ref<ResError | string | null>(null)
-const alertType = ref<"error" | "success" | "info" | "warning">("error")
-const alertTitle = ref<string>("Login Failed")
+export type AlertDatas = {
+    info: ResError | string | null,
+    type: "error" | "success" | "info" | "warning",
+    title: string
+}
+
+const alertDatas = ref<AlertDatas>({
+    info: null,
+    type: "error",
+    title: "Login Failed"
+})
 
 const { data: userInfos, error: error } = await useAsyncData("getUserInfoDatas", async () => {
     loading.value = true
     try {
         const res = await BearerFetch(be.head + be.api.dashboard.info + '?userId=' + localStorage.getItem(be.userIdKey)) as InfoGetRes
-        alertTitle.value = "Welcome!"
-        alertType.value = "success"
-        info.value = "Fetch user data successfully!"
+        alertDatas.value.title = "Welcome!"
+        alertDatas.value.type = "success"
+        alertDatas.value.info = "Fetch user data successfully!"
         return res
     } catch (err) {
         let e = err as ResError
-        alertTitle.value = "Something wrong!"
-        alertType.value = "error"
+        alertDatas.value.title = "Something wrong!"
+        alertDatas.value.type = "error"
         e.data.reason += " Jumping to Home after 3 seconds..."
-        info.value = e
+        alertDatas.value.info = e
         return {
             user: {
                 id: "@Error",
@@ -39,9 +47,10 @@ const { data: userInfos, error: error } = await useAsyncData("getUserInfoDatas",
 })
 
 provide(globalKeys.userInfosKey, userInfos.value)
+provide(globalKeys.dashboardAlertKey, alertDatas)
 
 onMounted(async() => {
-    if (alertType.value === "error") {
+    if (alertDatas.value.type === "error") {
         await delay(3000)
         localClear()
         useRouter().push(Paths.home)
@@ -66,7 +75,7 @@ onMounted(async() => {
                 <v-divider vertical style="height: 100%;"></v-divider>
             </v-col>
             <v-col>
-                <Alert :type="alertType" :title="alertTitle" v-model:info="info" />
+                <Alert :type="alertDatas.type" :title="alertDatas.title" v-model:info="alertDatas.info" />
                 <slot v-if="!loading" />
                 <v-skeleton-loader v-else color="white" :elevation="0"
                     class="border mx-auto pa-0 fill-height fill-width" type="image, article, image, table"
