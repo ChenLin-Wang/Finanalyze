@@ -26,7 +26,6 @@ final class User: DModel, @unchecked Sendable {
     static let T: [FieldType] = [
         ("id", .uuid, [.required], true),
         ("email", .string, [.required], true),
-        ("username", .string, [.required], false),
         ("password", .string, [.required], false),
         ("is_active", .bool, [.required, Def(true)], false),
         ("is_verified", .bool, [.required, Def(false)], false),
@@ -36,13 +35,12 @@ final class User: DModel, @unchecked Sendable {
     
     @ID(key: .id)                                               var id: UUID?
     @Field(key: T[1].0)                                         var email: String
-    @Field(key: T[2].0)                                         var username: String?
-    @Field(key: T[3].0)                                         var passwordHash: String
-    @Field(key: T[4].0)                                         var isActive: Bool
-    @Field(key: T[5].0)                                         var isVerified: Bool
-    @Timestamp(key: T[6].0, on: .create, 
+    @Field(key: T[2].0)                                         var passwordHash: String
+    @Field(key: T[3].0)                                         var isActive: Bool
+    @Field(key: T[4].0)                                         var isVerified: Bool
+    @Timestamp(key: T[5].0, on: .create, 
     format: .iso8601(withMilliseconds: true))                   var createdAt: Date?             
-    @Timestamp(key: T[7].0, on: .update, 
+    @Timestamp(key: T[6].0, on: .update, 
     format: .iso8601(withMilliseconds: true))                   var updatedAt: Date?
 
     struct NEW: Content, Sendable {
@@ -57,10 +55,9 @@ final class User: DModel, @unchecked Sendable {
     struct DTO: Content, Sendable {
         let id: User.IDValue
         let email: String
-        let username: String?
     }
 
-    @Sendable func dto(req: Request) throws -> DTO { DTO(id: try self.requireID(), email: self.email, username: self.username) }
+    @Sendable func dto(req: Request) throws -> DTO { DTO(id: try self.requireID(), email: self.email) }
 
     init() {}
 
@@ -70,7 +67,6 @@ final class User: DModel, @unchecked Sendable {
         self.id = nil
         self.email = email
         self.passwordHash = passwordHash
-        self.username = RandomString(length: 12)
         self.createdAt = nil
         self.updatedAt = nil
     }

@@ -32,18 +32,19 @@ struct UserSpace: RouteCollection {
         
         try await UserInfo.query(on: req.db)
             .set([
-                UserInfo.T[2].0: .bind(infos.firstName),
-                UserInfo.T[3].0: .bind(infos.middleName),
-                UserInfo.T[4].0: .bind(infos.lastName),
-                UserInfo.T[5].0: .bind(infos.avatar),
-                UserInfo.T[6].0: .bind(infos.age),
-                UserInfo.T[7].0: .bind(infos.gender),
-                UserInfo.T[8].0: .bind(infos.birthday),
-                UserInfo.T[9].0: .bind(infos.address),
-                UserInfo.T[10].0: .bind(infos.phoneNum),
-                UserInfo.T[11].0: .bind(infos.course),
-                UserInfo.T[12].0: .bind(infos.yearLvl),
-                UserInfo.T[13].0: .bind(infos.school),
+                UserInfo.T[2].0: .bind(infos.username),
+                UserInfo.T[3].0: .bind(infos.firstName),
+                UserInfo.T[4].0: .bind(infos.middleName),
+                UserInfo.T[5].0: .bind(infos.lastName),
+                UserInfo.T[6].0: .bind(infos.avatar),
+                UserInfo.T[7].0: .bind(infos.age),
+                UserInfo.T[8].0: .bind(infos.gender),
+                UserInfo.T[9].0: .bind(infos.birthday),
+                UserInfo.T[10].0: .bind(infos.address),
+                UserInfo.T[11].0: .bind(infos.phoneNum),
+                UserInfo.T[12].0: .bind(infos.course),
+                UserInfo.T[13].0: .bind(infos.yearLvl),
+                UserInfo.T[14].0: .bind(infos.school),
             ])
             .filter(\.$user.$id == infos.$user.id).update()
         return infos

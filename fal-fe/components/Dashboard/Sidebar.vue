@@ -50,7 +50,7 @@ const logOut = () => {
             <v-navigation-drawer permanent style="margin-top: 64px;" class="text-black">
                 <v-list>
                     <v-list-item prepend-avatar="https://cdn.vuetifyjs.com/images/john.png" :subtitle="userInfos.user.email"
-                        :title="userInfos.user.username">
+                        :title="userInfos.username">
                     </v-list-item>
                 </v-list>
                 <v-divider></v-divider>

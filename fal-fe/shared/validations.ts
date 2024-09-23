@@ -7,8 +7,9 @@ export const strLenValidate = (len: number, label: string, less: boolean = true)
     return (v: string) => (less ? v?.length <= len : v?.length >= len) || `${label} needs to be ${less ? 'short than' : 'at least'} ${len} characters.`
 }
 
-export const numValidate = (boundary: number, label: string, less: boolean = true) => {
-    return (v: number) => (less ? v <= boundary : v >= boundary) || `${label} needs to be ${less ? 'smaller than' : 'larger than'} ${boundary}.`
+export const numValidate = (boundary: number, label: string, less: boolean = true, allowEmpty: boolean = false) => {
+    return allowEmpty ? (v?: number) => (v === null || v === undefined) ? true : (less ? v <= boundary : v >= boundary) || `${label} needs to be ${less ? 'smaller than' : 'larger than'} ${boundary}.` :
+        (v: number) => (less ? v <= boundary : v >= boundary) || `${label} needs to be ${less ? 'smaller than' : 'larger than'} ${boundary}.`
 }
 
 export const digitLenValidate = (digitLen: number, label: string, less: boolean = false, allowEmpty: boolean = false) => {

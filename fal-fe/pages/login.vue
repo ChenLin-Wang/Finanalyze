@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { UserLoginData } from '~/components/Auth/Login.vue';
 import { be, type LoginPostRes, type ResError } from '~/shared/backend';
-import { delay } from '~/shared/funcs';
+import { delay, localClear } from '~/shared/funcs';
 import { Paths } from '~/shared/paths';
 
 definePageMeta({ layout: 'plain' })
@@ -24,7 +24,6 @@ const login = async (value: UserLoginData) => {
         alertTitle.value = "Login Success!"
         alertType.value = "success"
         info.value = "Jumping to Dashboard..."
-        await delay(3000)
         localStorage.setItem(be.tokenKey, res.token)
         localStorage.setItem(be.userIdKey, res.user.id)
         useRouter().push(Paths.dashboard)

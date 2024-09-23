@@ -11,7 +11,7 @@ function toFormValue(info: InfoGetRes): FormValue {
     return {
         userId: info.user.id,
         email: info.user.email,
-        username: info.user.username,
+        username: info.username,
         firstName: info.firstName,
         lastName: info.lastName,
         middleName: info.middleName,
@@ -29,8 +29,8 @@ function toFormValue(info: InfoGetRes): FormValue {
 
 const submit = async (value: FormValue) => {
     var vals = deepCopy(value)
-
     if (vals._bday) { vals._bday = DateToShortStr(new Date(vals._bday)) }
+    if (typeof vals.age === "string") vals.age = undefined
     try {
         const submitRes: InfoGetRes = await BearerFetch(be.head + be.api.dashboard.info, {
             method: 'POST',

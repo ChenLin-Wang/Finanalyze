@@ -27,7 +27,7 @@ const regis = async (value: UserRegisData) => {
         alertTitle.value = "Register Success!"
         alertType.value = "success"
         info.value = "Jumping to Login..."
-        await delay(3000)
+        // await delay(3000)
         useRouter().push(Paths.login);
     } catch (error) {
         alertTitle.value = "Register Failed"

@@ -19,8 +19,7 @@ export const be = backend_defaults
 
 export type UserBasic = {
     id: string,
-    email: string,
-    username: string
+    email: string
 }
 
 export type RegisPostRes = UserBasic
@@ -31,7 +30,8 @@ export type LoginPostRes = {
 }
 
 export type InfoGetRes = {
-    user: UserBasic,
+    user: UserBasic
+    username: string
     firstName: string
     lastName: string
     middleName?: string
