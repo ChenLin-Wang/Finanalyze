@@ -10,6 +10,7 @@ const info = ref<ResError | string | null>(null)
 const alertType = ref<"error" | "success" | "info" | "warning">("error")
 const alertTitle = ref<string>("Login Failed")
 const loading = ref(false)
+const showAlert = ref(false)
 
 const login = async (value: UserLoginData) => {
     loading.value = true
@@ -24,6 +25,7 @@ const login = async (value: UserLoginData) => {
         alertTitle.value = "Login Success!"
         alertType.value = "success"
         info.value = "Jumping to Dashboard..."
+        showAlert.value = true
         localStorage.setItem(be.tokenKey, res.token)
         localStorage.setItem(be.userIdKey, res.user.id)
         useRouter().push(Paths.dashboard)
@@ -31,7 +33,7 @@ const login = async (value: UserLoginData) => {
         alertTitle.value = "Login Failed"
         alertType.value = "error"
         info.value = error as ResError
-        localClear()
+        showAlert.value = true
     } finally {
         loading.value = false
     }
@@ -40,7 +42,7 @@ const login = async (value: UserLoginData) => {
 
 <template>
     <v-container fluid class="ma-0 pa-0">
-        <Alert :type="alertType" :title="alertTitle" v-model:info="info" />
+        <Alert :type="alertType" :title="alertTitle" :info="info" v-model:show="showAlert"/>
         <v-row class="ma-0 pa-0" style="min-height: 100vh;" align="center" justify="center">
             <v-col>
                 <AuthLogin class="ma-5" :loading="loading" @login="login" />

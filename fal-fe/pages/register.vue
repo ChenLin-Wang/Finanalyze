@@ -10,6 +10,7 @@ const info = ref<ResError | string | null>(null)
 const alertType = ref<"error" | "success" | "info" | "warning">("error")
 const alertTitle = ref<string>("Register Failed")
 const loading = ref(false)
+const showAlert = ref(false)
 
 const regis = async (value: UserRegisData) => {
     loading.value = true
@@ -27,13 +28,13 @@ const regis = async (value: UserRegisData) => {
         alertTitle.value = "Register Success!"
         alertType.value = "success"
         info.value = "Jumping to Login..."
-        // await delay(3000)
+        showAlert.value = true
         useRouter().push(Paths.login);
     } catch (error) {
         alertTitle.value = "Register Failed"
         alertType.value = "error"
         info.value = error as ResError
-        localClear()
+        showAlert.value = true
     } finally {
         loading.value = false
     }
@@ -41,7 +42,7 @@ const regis = async (value: UserRegisData) => {
 </script>
 <template>
     <v-container fluid class="ma-0 pa-0">
-        <Alert :type="alertType" :title="alertTitle" v-model:info="info" />
+        <Alert :type="alertType" :title="alertTitle" :info="info" v-model:show="showAlert"/>
         <v-row class="ma-0 pa-0" style="min-height: 100vh;" align="center" justify="center">
             <v-col>
                 <AuthRegis @submit="regis" :loading="loading" class="ma-5"></AuthRegis>

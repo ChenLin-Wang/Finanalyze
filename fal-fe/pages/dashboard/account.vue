@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import type { FormValue } from '~/components/Dashboard/InfoForm.vue';
-import { be, BearerFetch, type InfoGetRes } from '~/shared/backend';
+import type { AlertDatas } from '~/layouts/default.vue';
+import { be, BearerFetch, type InfoGetRes, type ResError } from '~/shared/backend';
 import { DateToShortStr } from '~/shared/dateFunctions';
 import { deepCopy } from '~/shared/funcs';
 import { globalKeys } from '~/shared/paths';
 
 const infos = ref(inject(globalKeys.userInfosKey) as InfoGetRes)
+const alertDatas = ref(inject(globalKeys.dashboardAlertKey) as AlertDatas)
 
 function toFormValue(info: InfoGetRes): FormValue {
     return {
@@ -37,10 +39,19 @@ const submit = async (value: FormValue) => {
             body: vals
         }) as InfoGetRes
         infos.value = submitRes
+        alertDatas.value = {
+            info: "You informations is updated.",
+            type: "success",
+            title: "Update successfully!"
+        }
     } catch (error) {
-
+        alertDatas.value = {
+            info: error as ResError,
+            type: "error",
+            title: "Update Failed!"
+        }
     } finally {
-
+        
     }
 }
 

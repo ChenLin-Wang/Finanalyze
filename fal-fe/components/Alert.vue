@@ -3,19 +3,16 @@ import type { ResError } from '~/shared/backend';
 
 const props = withDefaults(defineProps<{
     title: string,
+    info: string | ResError | null
     type?: "error" | "success" | "info" | "warning",
 }>(), {
     type: "error",
-    alert: true,
-    style: "error"
 })
-const info = defineModel<string | ResError | null>("info")
-const alert = ref(info !== null)
+const show = defineModel<boolean | undefined>("show")
 const emit = defineEmits<{ (e: "closed"): void }>()
 
-watch(alert, (newValue) => {
+watch(show, (newValue) => {
     if (newValue === false) {
-        info.value = null
         emit('closed');
     }
 })
@@ -25,7 +22,7 @@ watch(alert, (newValue) => {
     <div>
         <v-alert 
             v-if="info"
-            v-model="alert"
+            v-model="show"
             border="start" 
             close-label="Close Alert" 
             :title="title" 
