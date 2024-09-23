@@ -81,7 +81,7 @@ onMounted(async() => {
                 <v-divider vertical style="height: 100%;"></v-divider>
             </v-col>
             <v-col>
-                <Alert :type="alertDatas.type" :title="alertDatas.title" :info="alertDatas.info" v-model:show="alertDatas.show"/>
+                <Alert :type="alertDatas.type" :title="alertDatas.title" :info="alertDatas.info" v-model:show="alertDatas.show" :timeout="3000"/>
                 <slot v-if="!loading.content" />
                 <v-skeleton-loader v-else color="white" :elevation="0"
                     class="border mx-auto pa-0 fill-height fill-width" type="image, article, image, table"

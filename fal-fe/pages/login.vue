@@ -42,7 +42,7 @@ const login = async (value: UserLoginData) => {
 
 <template>
     <v-container fluid class="ma-0 pa-0">
-        <Alert :type="alertType" :title="alertTitle" :info="info" v-model:show="showAlert"/>
+        <Alert :type="alertType" :title="alertTitle" :info="info" v-model:show="showAlert" :timeout="3000"/>
         <v-row class="ma-0 pa-0" style="min-height: 100vh;" align="center" justify="center">
             <v-col>
                 <AuthLogin class="ma-5" :loading="loading" @login="login" />
