@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormValue } from '~/components/Dashboard/InfoForm.vue';
-import type { AlertDatas } from '~/layouts/default.vue';
+import type { AlertDatas, LoadingStatus } from '~/layouts/default.vue';
 import { be, BearerFetch, type InfoGetRes, type ResError } from '~/shared/backend';
 import { DateToShortStr } from '~/shared/dateFunctions';
 import { deepCopy } from '~/shared/funcs';
@@ -8,6 +8,7 @@ import { globalKeys } from '~/shared/paths';
 
 const infos = ref(inject(globalKeys.userInfosKey) as InfoGetRes)
 const alertDatas = ref(inject(globalKeys.dashboardAlertKey) as AlertDatas)
+const contentLoading = ref(inject(globalKeys.dashboardLoadingKey) as LoadingStatus)
 
 function toFormValue(info: InfoGetRes): FormValue {
     return {
@@ -30,6 +31,7 @@ function toFormValue(info: InfoGetRes): FormValue {
 }
 
 const submit = async (value: FormValue) => {
+    contentLoading.value.content = true
     var vals = deepCopy(value)
     if (vals._bday) { vals._bday = DateToShortStr(new Date(vals._bday)) }
     if (typeof vals.age === "string") vals.age = undefined
@@ -42,16 +44,18 @@ const submit = async (value: FormValue) => {
         alertDatas.value = {
             info: "You informations is updated.",
             type: "success",
-            title: "Update successfully!"
+            title: "Update successfully!",
+            show: true
         }
     } catch (error) {
         alertDatas.value = {
             info: error as ResError,
             type: "error",
-            title: "Update Failed!"
+            title: "Update Failed!",
+            show: true
         }
     } finally {
-        
+        contentLoading.value.content = false
     }
 }
 
