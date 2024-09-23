@@ -32,8 +32,8 @@ export type LoginPostRes = {
 export type InfoGetRes = {
     user: UserBasic
     username: string
-    firstName: string
-    lastName: string
+    firstName?: string
+    lastName?: string
     middleName?: string
     avatar?: string
     age?: number

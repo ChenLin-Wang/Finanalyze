@@ -39,7 +39,6 @@ const userInfos = ref(inject(globalKeys.userInfosKey) as InfoGetRes)
 
 const logOut = () => {
     localClear()
-    useRouter().push(Paths.home)
 }
 
 </script>

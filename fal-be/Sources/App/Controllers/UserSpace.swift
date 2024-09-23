@@ -20,16 +20,9 @@ struct UserSpace: RouteCollection {
     }
 
     @Sendable func updateInfos(req: Request) async throws -> UserInfo {
-        // print(try req.content)
         try req.auth.require(User.self)
         let createDatas = try req.content.decode(UserInfo.NEW.self)
-        // let testU = try await User.query(on: req.db).first()
-        // let createDatas = try UserInfo.NEW(userId: testU!.requireID(), firstName: "ChenLin", lastName: "Wang", gender: "Male", birthday: Date())
-        // print(createDatas)
-
         let infos: UserInfo = try UserInfo(data: createDatas)
-        // print(infos)
-        
         try await UserInfo.query(on: req.db)
             .set([
                 UserInfo.T[2].0: .bind(infos.username),

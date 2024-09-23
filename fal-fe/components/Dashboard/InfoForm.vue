@@ -12,8 +12,8 @@ export type FormValue = {
     userId: string
     email: string
     username: string
-    firstName: string
-    lastName: string
+    firstName?: string
+    lastName?: string
     middleName?: string
     avatar?: string
     age?: number
@@ -50,13 +50,13 @@ const hintGroups = [
     [["User Name", true, "username", "12", "string", false, [strLenValidate(2, "User Name", false)]],],
 
     [
-        ["First Name", false, "firstName", "6", "string", false, [strLenValidate(2, "First Name", false)]],
-        ["Last Name", false, "lastName", "6", "string", false, [strLenValidate(2, "Last Name", false)]],
+        ["First Name", false, "firstName", "6", "string", false, []],
+        ["Last Name", false, "lastName", "6", "string", false, []],
     ],
     [["Middle Name", false, "middleName", "12", "string", false, []],],
 
     [["Gender", false, "gender", "12", "selector", false, [], [Gender.male, Gender.female, Gender.none]],],
-    [["Age", false, "age", "12", "number", false, [numValidate(120, "Age", true, false), numValidate(0, "Age", false, false)]],],
+    [["Age", false, "age", "12", "number", false, [numValidate(120, "Age", true, true), numValidate(0, "Age", false, true)]],],
     [["Birthday", false, "_bday", "12", "date", false, [], "bdayDate", [-3784320000, 0]],],
     [["Phone Number", false, "phoneNum", "12", "string", false, [digitLenValidate(7, "Phone Number", false, true), digitLenValidate(15, "Phone Number", true, true)]],],
     [["Address", false, "address", "12", "string", false, []],],

@@ -1,20 +1,50 @@
 <script setup lang="ts">
-import { be, BearerFetch, type InfoGetRes } from '~/shared/backend';
-import { localClear } from '~/shared/funcs';
-import { globalKeys } from '~/shared/paths';
+import { be, BearerFetch, type InfoGetRes, type ResError } from '~/shared/backend';
+import { delay, localClear } from '~/shared/funcs';
+import { globalKeys, Paths } from '~/shared/paths';
 
 const loading = ref(true)
-const userInfos = ref<InfoGetRes|null>(null)
-provide(globalKeys.userInfosKey, userInfos)
 
-onMounted(async () => {
+const info = ref<ResError | string | null>(null)
+const alertType = ref<"error" | "success" | "info" | "warning">("error")
+const alertTitle = ref<string>("Login Failed")
+
+const { data: userInfos, error: error } = await useAsyncData("getUserInfoDatas", async () => {
     loading.value = true
     try {
-        userInfos.value = await BearerFetch(be.head + be.api.dashboard.info + '?userId=' + localStorage.getItem(be.userIdKey)) as InfoGetRes
+        const res = await BearerFetch(be.head + be.api.dashboard.info + '?userId=' + localStorage.getItem(be.userIdKey)) as InfoGetRes
+        alertTitle.value = "Welcome!"
+        alertType.value = "success"
+        info.value = "Fetch user data successfully!"
+        return res
     } catch (err) {
-        localClear()
+        let e = err as ResError
+        alertTitle.value = "Something wrong!"
+        alertType.value = "error"
+        e.data.reason += " Jumping to Home after 3 seconds..."
+        info.value = e
+        return {
+            user: {
+                id: "@Error",
+                email: "err@error.error"
+            },
+            username: "@Error",
+            firstName: "@Error",
+            lastName: "",
+            gender: ""
+        }
     } finally {
         loading.value = false
+    }
+})
+
+provide(globalKeys.userInfosKey, userInfos.value)
+
+onMounted(async() => {
+    if (alertType.value === "error") {
+        await delay(3000)
+        localClear()
+        useRouter().push(Paths.home)
     }
 })
 
@@ -26,20 +56,21 @@ onMounted(async () => {
     <v-container fluid class="pa-0 ma-0">
         <v-row no-gutters>
             <v-col class="pa-0 ma-0" cols="auto" style="width: 256px; min-height: calc(100vh - 64px);">
-                <DashboardSidebar v-if="!loading"></DashboardSidebar>
+                <DashboardSidebar v-if="!loading" />
                 <v-skeleton-loader v-else color="white" :elevation="0"
                     class="border mx-auto pa-0 fill-height fill-width"
-                    type="list-item-avatar-two-line, divider, list-item-two-line, divider, list-item-two-line, divider, list-item-two-line, divider, list-item-two-line, divider, list-item-two-line, divider" 
+                    type="list-item-avatar-two-line, divider, list-item-two-line, divider, list-item-two-line, divider, list-item-two-line, divider, list-item-two-line, divider, list-item-two-line, divider"
                     style="display: block;"></v-skeleton-loader>
             </v-col>
             <v-col cols="auto" style="display: flex;">
                 <v-divider vertical style="height: 100%;"></v-divider>
             </v-col>
             <v-col>
-                 <slot v-if="!loading" />
-                 <v-skeleton-loader v-else color="white" :elevation="0"
-                    class="border mx-auto pa-0 fill-height fill-width"
-                    type="image, article, image, table" style="display: block;"></v-skeleton-loader>
+                <Alert :type="alertType" :title="alertTitle" v-model:info="info" />
+                <slot v-if="!loading" />
+                <v-skeleton-loader v-else color="white" :elevation="0"
+                    class="border mx-auto pa-0 fill-height fill-width" type="image, article, image, table"
+                    style="display: block;"></v-skeleton-loader>
             </v-col>
         </v-row>
 
