@@ -4,7 +4,7 @@
 
 This project is part of the course **CpE 314 - Software Designing**, where the goal is to build a modern, functional system combining state-of-the-art technologies such as AI and web development frameworks.
 
-
+[See our website here](http://finanalyze.inspiral.site:3000)
 
 ## Features
 
@@ -63,6 +63,9 @@ Not yet
 - **Backend**: Vapor + Swift
 - **Database**: PostgreSQL
 - **AI Integration**: Google Vision AI
+- **Hosting**:
+  - **Domain Name**: GoDaddy
+  - **Cloud Server**: Google VPS (Ubuntu 22.04.5 LTS)
 
 
 
