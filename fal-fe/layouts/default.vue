@@ -50,6 +50,10 @@ onBeforeMount(async() => {
     }
 })
 
+const router = useRouter()
+router.beforeEach(() => { loading.value.content = true })
+router.afterEach(() => { loading.value.content = false })
+
 </script>
 
 <template>

@@ -59,6 +59,10 @@ const submit = async (value: FormValue) => {
     }
 }
 
+onMounted(() => {
+    console.log("5")
+})
+
 </script>
 
 <template>
