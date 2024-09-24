@@ -35,6 +35,7 @@ const items = ref([
     }
 ])
 
+
 const userInfos = ref(inject(globalKeys.userInfosKey) as InfoGetRes)
 
 const logOut = () => {
@@ -46,10 +47,10 @@ const logOut = () => {
 <template>
     <v-container fluid class="text-begin pa-0 ma-0">
         <v-layout>
-            <v-navigation-drawer permanent style="margin-top: 64px;" class="text-black">
+            <v-navigation-drawer permanent style="margin-top: 64px; width: 256px" class="text-black">
                 <v-list>
-                    <v-list-item prepend-avatar="https://cdn.vuetifyjs.com/images/john.png" :subtitle="userInfos.user.email"
-                        :title="userInfos.username">
+                    <v-list-item prepend-avatar="https://cdn.vuetifyjs.com/images/john.png" :subtitle="userInfos?.user?.email"
+                        :title="userInfos?.username">
                     </v-list-item>
                 </v-list>
                 <v-divider></v-divider>

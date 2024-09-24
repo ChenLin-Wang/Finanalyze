@@ -1,9 +1,8 @@
 const backend_defaults = {
     host: "localhost",
     port: 1511,
-    head: "http://localhost:1511",
+    head: "http://api.finanalyze.inspiral.site:1511",
     tokenKey: 'authToken',
-    userIdKey: 'userId',
     api: {
         auth: {
             register: '/register',

@@ -12,7 +12,7 @@ export type AlertDatas = {
 
 export type LoadingStatus = { sidebar: boolean, content: boolean }
 
-const loading = ref<LoadingStatus>({ sidebar: false, content: false })
+const loading = ref<LoadingStatus>({ sidebar: true, content: true })
 const alertDatas = ref<AlertDatas>({
     info: null,
     type: "error",
@@ -20,16 +20,22 @@ const alertDatas = ref<AlertDatas>({
     show: false
 })
 
-const { data: userInfos, error: error } = await useAsyncData("getUserInfoDatas", async () => {
+const userInfos = ref<InfoGetRes | null>(null)
+
+provide(globalKeys.dashboardAlertKey, alertDatas)
+provide(globalKeys.dashboardLoadingKey, loading)
+provide(globalKeys.userInfosKey, userInfos)
+
+onBeforeMount(async() => {
     loading.value = { sidebar: true, content: true }
     try {
-        const res = await BearerFetch(be.head + be.api.dashboard.info + '?userId=' + localStorage.getItem(be.userIdKey)) as InfoGetRes
+        const res = await BearerFetch(be.head + be.api.dashboard.info) as InfoGetRes
         alertDatas.value.title = "Welcome!"
         alertDatas.value.type = "success"
         alertDatas.value.info = "Fetch user data successfully!"
         alertDatas.value.show = true
         loading.value = { sidebar: false, content: false }
-        return res
+        userInfos.value = res
     } catch (err) {
         let e = err as ResError
         alertDatas.value.title = "Something wrong!"
@@ -37,26 +43,7 @@ const { data: userInfos, error: error } = await useAsyncData("getUserInfoDatas",
         e.data.reason += " Jumping to Home after 3 seconds..."
         alertDatas.value.info = e
         alertDatas.value.show = true
-        loading.value = { sidebar: false, content: false }
-        return {
-            user: {
-                id: "@Error",
-                email: "err@error.error"
-            },
-            username: "@Error",
-            firstName: "@Error",
-            lastName: "",
-            gender: ""
-        }
-    }
-})
-
-provide(globalKeys.userInfosKey, userInfos)
-provide(globalKeys.dashboardAlertKey, alertDatas)
-provide(globalKeys.dashboardLoadingKey, loading)
-
-onMounted(async() => {
-    if (alertDatas.value.type === "error") {
+        userInfos.value = null
         await delay(3000)
         localClear()
         useRouter().push(Paths.home)

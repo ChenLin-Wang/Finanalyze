@@ -27,7 +27,6 @@ const login = async (value: UserLoginData) => {
         info.value = "Jumping to Dashboard..."
         showAlert.value = true
         localStorage.setItem(be.tokenKey, res.token)
-        localStorage.setItem(be.userIdKey, res.user.id)
         useRouter().push(Paths.dashboard)
     } catch (error) {
         alertTitle.value = "Login Failed"
