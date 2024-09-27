@@ -1,0 +1,39 @@
+cd ~/
+
+~/.acme.sh/acme.sh --uninstall
+
+sudo su
+
+cd ~/
+
+curl https://get.acme.sh | sh -s email=wangchenlin2001@gmail.com
+
+---------------------------------------- inspiral.site -----------------------------------
+
+~/.acme.sh/acme.sh --issue --dns -d inspiral.site --yes-I-know-dns-manual-mode-enough-go-ahead-please
+
+~/.acme.sh/acme.sh --renew -d inspiral.site --yes-I-know-dns-manual-mode-enough-go-ahead-please
+
+mkdir /etc/nginx/inspiral/inspiral.ssl-certs
+
+~/.acme.sh/acme.sh --install-cert -d inspiral.site --key-file /etc/nginx/inspiral/inspiral.ssl-certs/key.pem  --fullchain-file /etc/nginx/inspiral/inspiral.ssl-certs/cert.pem --reloadcmd "systemctl restart nginx"
+
+---------------------------------------- finanalyze.inspiral.site -----------------------------------
+
+~/.acme.sh/acme.sh --issue --dns -d finanalyze.inspiral.site -d *.finanalyze.inspiral.site --yes-I-know-dns-manual-mode-enough-go-ahead-please
+
+~/.acme.sh/acme.sh --renew -d finanalyze.inspiral.site -d *.finanalyze.inspiral.site --yes-I-know-dns-manual-mode-enough-go-ahead-please
+
+mkdir /etc/nginx/inspiral/finanalyze.inspiral.ssl-certs
+
+~/.acme.sh/acme.sh --install-cert -d finanalyze.inspiral.site --key-file /etc/nginx/inspiral/finanalyze.inspiral.ssl-certs/key.pem  --fullchain-file /etc/nginx/inspiral/finanalyze.inspiral.ssl-certs/cert.pem --reloadcmd "systemctl restart nginx"
+
+---------------------------------------- tones.inspiral.site -----------------------------------
+
+~/.acme.sh/acme.sh --issue --dns -d tones.inspiral.site -d *.tones.inspiral.site --yes-I-know-dns-manual-mode-enough-go-ahead-please
+
+~/.acme.sh/acme.sh --renew -d tones.inspiral.site -d *.tones.inspiral.site --yes-I-know-dns-manual-mode-enough-go-ahead-please
+
+mkdir /etc/nginx/inspiral/tones.inspiral.ssl-certs
+
+~/.acme.sh/acme.sh --install-cert -d tones.inspiral.site --key-file /etc/nginx/inspiral/tones.inspiral.ssl-certs/key.pem  --fullchain-file /etc/nginx/inspiral/tones.inspiral.ssl-certs/cert.pem --reloadcmd "systemctl restart nginx"
