@@ -9,6 +9,7 @@ final class TableNames {
     static let userInfos = "user_infos"
     static let transactions = "transactions"
     static let fileUploads = "file_uploads"
+    static let aiChats = "ai_chats"
 }
 
 typealias FieldType = (FieldKey, DatabaseSchema.DataType, [DatabaseSchema.FieldConstraint], Bool)

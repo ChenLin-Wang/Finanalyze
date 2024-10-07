@@ -43,6 +43,7 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(UserInfo.MIG())
     app.migrations.add(Transaction.MIG())
     app.migrations.add(FileUpload.MIG())
+    app.migrations.add(AiChat.MIG())
     
     // app.logger.logLevel = .debug
     try await app.autoMigrate()
