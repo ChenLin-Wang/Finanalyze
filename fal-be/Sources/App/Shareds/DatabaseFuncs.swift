@@ -7,6 +7,8 @@ final class TableNames {
     static let pswReset = "password_resets"
     static let tokens = "tokens"
     static let userInfos = "user_infos"
+    static let transactions = "transactions"
+    static let fileUploads = "file_uploads"
 }
 
 typealias FieldType = (FieldKey, DatabaseSchema.DataType, [DatabaseSchema.FieldConstraint], Bool)
@@ -42,6 +44,7 @@ protocol DModel: Model, AsyncResponseEncodable, Sendable {
     associatedtype MIG: DMigration
     static var T: [FieldType] {get}
     @Sendable func dto(req: Request) async throws -> DTO
+    // @Sendable func dtos(from models: [Self], req: Request) async throws -> [DTO]
 }
 
 extension DModel {
@@ -62,5 +65,21 @@ extension DMigration {
 
     func revert(on database: Database) -> EventLoopFuture<Void> {
         database.schema(MOD.schema).delete()
+    }
+}
+
+extension Array {
+    func asyncMap<T>(_ transform: (Element) async throws -> T) async throws -> [T] {
+        var results = [T]()
+        for element in self {
+            try await results.append(transform(element))
+        }
+        return results
+    }
+}
+
+extension Array where Element: DModel {
+    @Sendable func dtos(req: Request) async throws -> [Element.DTO] {
+        try await self.asyncMap { try await $0.dto(req: req) }
     }
 }

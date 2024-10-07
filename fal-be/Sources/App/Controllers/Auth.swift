@@ -13,10 +13,8 @@ struct AuthC: RouteCollection {
         let userDatas = try req.content.decode(User.NEW.self)
         let user = try User(data: userDatas)
         try await user.save(on: req.db)
-
         let infos = try UserInfo(userId: user.requireID())
         try await infos.save(on: req.db)
-        
         return user
     }
 

@@ -37,3 +37,24 @@ mkdir /etc/nginx/inspiral/finanalyze.inspiral.ssl-certs
 mkdir /etc/nginx/inspiral/tones.inspiral.ssl-certs
 
 ~/.acme.sh/acme.sh --install-cert -d tones.inspiral.site --key-file /etc/nginx/inspiral/tones.inspiral.ssl-certs/key.pem  --fullchain-file /etc/nginx/inspiral/tones.inspiral.ssl-certs/cert.pem --reloadcmd "systemctl restart nginx"
+
+
+---------------------------------------- aswangking.inspiral.site -----------------------------------
+
+~/.acme.sh/acme.sh --issue --dns -d aswangking.inspiral.site -d *.aswangking.inspiral.site --yes-I-know-dns-manual-mode-enough-go-ahead-please
+
+~/.acme.sh/acme.sh --renew -d aswangking.inspiral.site -d *.aswangking.inspiral.site --yes-I-know-dns-manual-mode-enough-go-ahead-please
+
+mkdir /etc/nginx/inspiral/aswangking.inspiral.ssl-certs
+
+~/.acme.sh/acme.sh --install-cert -d aswangking.inspiral.site --key-file /etc/nginx/inspiral/aswangking.inspiral.ssl-certs/key.pem  --fullchain-file /etc/nginx/inspiral/aswangking.inspiral.ssl-certs/cert.pem --reloadcmd "systemctl restart nginx"
+
+---------------------------------------- noblecity.inspiral.site -----------------------------------
+
+~/.acme.sh/acme.sh --issue --dns -d noblecity.inspiral.site -d *.noblecity.inspiral.site --yes-I-know-dns-manual-mode-enough-go-ahead-please
+
+~/.acme.sh/acme.sh --renew -d noblecity.inspiral.site -d *.noblecity.inspiral.site --yes-I-know-dns-manual-mode-enough-go-ahead-please
+
+mkdir /etc/nginx/inspiral/noblecity.inspiral.ssl-certs
+
+~/.acme.sh/acme.sh --install-cert -d noblecity.inspiral.site --key-file /etc/nginx/inspiral/noblecity.inspiral.ssl-certs/key.pem  --fullchain-file /etc/nginx/inspiral/noblecity.inspiral.ssl-certs/cert.pem --reloadcmd "systemctl restart nginx"

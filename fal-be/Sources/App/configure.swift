@@ -31,15 +31,18 @@ public func configure(_ app: Application) async throws {
     let cors = CORSMiddleware(configuration: corsConfiguration)
     let error = ErrorMiddleware.default(environment: app.environment)
     
+    app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
     app.middleware.use(cors)
     app.middleware.use(error)
 
-    app.sessions.use(.fluent)
+    // app.sessions.use(.fluent)
 
     app.migrations.add(User.MIG())
     app.migrations.add(PswReset.MIG())
     app.migrations.add(Token.MIG())
     app.migrations.add(UserInfo.MIG())
+    app.migrations.add(Transaction.MIG())
+    app.migrations.add(FileUpload.MIG())
     
     // app.logger.logLevel = .debug
     try await app.autoMigrate()
