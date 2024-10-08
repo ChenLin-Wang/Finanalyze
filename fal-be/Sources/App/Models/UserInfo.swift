@@ -15,7 +15,7 @@ final class UserInfo: DModel, @unchecked Sendable {
         ("first_name", .string, [.required], false),
         ("middle_name", .string, [], false),
         ("last_name", .string, [.required], false),
-        ("avatar", .string, [], false),
+        ("avatar", .string, [.required], false),
         ("age", .uint16, [], false),
         ("gender", .string, [.required], false),
         ("birthday", .date, [], false),
@@ -32,7 +32,7 @@ final class UserInfo: DModel, @unchecked Sendable {
     @Field(key: T[3].0)                             var firstName: String
     @Field(key: T[4].0)                             var middleName: String?
     @Field(key: T[5].0)                             var lastName: String
-    @Field(key: T[6].0)                             var avatar: String?
+    @Field(key: T[6].0)                             var avatar: String
     @Field(key: T[7].0)                             var age: Int?
     @Field(key: T[8].0)                             var gender: String
     @Timestamp(key: T[9].0, on: .none,
@@ -47,14 +47,14 @@ final class UserInfo: DModel, @unchecked Sendable {
 
     struct NEW: Content, Sendable {
         var userId: User.IDValue; var username: String; var firstName: String; var middleName: String?
-        var lastName: String; var avatar: String?; var age: Int?; var gender: String; var _bday: String?
+        var lastName: String; var avatar: String; var age: Int?; var gender: String; var _bday: String?
         var address: String?; var phoneNum: String?; var course: String?
         var yearLvl: String?; var school: String?;
     }
     
     struct DTO: Content, Sendable {
         var user: User.DTO; var username: String; var firstName: String; var middleName: String?
-        var lastName: String; var avatar: String?; var age: Int?; var gender: Gender
+        var lastName: String; var avatar: String; var age: Int?; var gender: Gender
         var birthday: Date?; var address: String?; var phoneNum: String?; var course: String?
         var yearLvl: String?; var school: String?
     }
@@ -84,7 +84,7 @@ final class UserInfo: DModel, @unchecked Sendable {
 
     init(
         userId: User.IDValue, username: String = RandomString(length: 12), firstName: String = "", lastName: String = "", middleName: String? = nil,
-        avatar: String? = nil, age: Int? = nil, gender: Gender = .none, birthday: Date? = nil,
+        avatar: String = "https://api.finanalyze.inspiral.site/uploads/avatar/default.png", age: Int? = nil, gender: Gender = .none, birthday: Date? = nil,
         address: String? = nil, phoneNum: String? = nil, course: String? = nil,
         yearLvl: String? = nil, school: String? = nil
     ) {

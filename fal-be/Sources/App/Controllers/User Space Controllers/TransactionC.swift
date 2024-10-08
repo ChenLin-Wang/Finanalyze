@@ -4,14 +4,15 @@ import Fluent
 struct TransactionC: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let transactionRoute = routes.grouped("transactions")
+        transactionRoute.put(use: newTransaction)
         transactionRoute.get(use: getTransactions)
         transactionRoute.post(use: updateTransaction)
-        transactionRoute.post("new", use: newTransaction)
+        transactionRoute.delete(use: deleteTransaction)
     }
 
-        @Sendable func getTransactions(req: Request) async throws -> [Transaction.DTO] {
+    @Sendable func getTransactions(req: Request) async throws -> [Transaction.DTO] {
         let user = try req.auth.require(User.self)
-        let transactions = try await Transaction.query(on: req.db).filter(\.$consumer.$id == user.requireID()).all()
+        let transactions = try await Transaction.query(on: req.db).filter(\.$consumer.$id == user.requireID()).sort(\.$transactionDate).sort(\.$itemName).all().reversed() as [Transaction]
         return try await transactions.dtos(req: req)
     }
 
@@ -23,21 +24,32 @@ struct TransactionC: RouteCollection {
         return transaction
     }
 
-    @Sendable func updateTransaction(req: Request) async throws -> Transaction {
-        try req.auth.require(User.self)
-        let transactionDatas = try req.content.decode(Transaction.NEW.self)
-        let transaction = try Transaction(data: transactionDatas)
+    @Sendable func updateTransaction(req: Request) async throws -> Response {
+        let user = try req.auth.require(User.self)
+        let transactionDatas = try req.content.decode(Transaction.UPD.self)
         try await Transaction.query(on: req.db)
             .set([
-                Transaction.T[2].0: .bind(transaction.itemName),
-                Transaction.T[3].0: .bind(transaction.itemAmount),
-                Transaction.T[4].0: .bind(transaction.pricePerUnit),
-                Transaction.T[5].0: .bind(transaction.location),
-                Transaction.T[6].0: .bind(transaction.brand),
-                Transaction.T[7].0: .bind(transaction.category),
-                Transaction.T[8].0: .bind(transaction.transactionDate),
+                Transaction.T[2].0: .bind(transactionDatas.itemName),
+                Transaction.T[3].0: .bind(transactionDatas.itemAmount),
+                Transaction.T[4].0: .bind(transactionDatas.pricePerUnit),
+                Transaction.T[5].0: .bind(transactionDatas.location),
+                Transaction.T[6].0: .bind(transactionDatas.brand),
+                Transaction.T[7].0: .bind(transactionDatas.category),
+                Transaction.T[8].0: .bind(ShortDateFormatter().date(from: transactionDatas.__transactionDate)),
             ])
-            .filter(\.$consumer.$id == transaction.$consumer.id).update()
-        return transaction
+            .filter(\.$consumer.$id == user.requireID())
+            .filter(\.$id == transactionDatas.id)
+            .update()
+        return Response(status: .ok)
+    }
+
+    @Sendable func deleteTransaction(req: Request) async throws -> Response {
+        let user = try req.auth.require(User.self)
+        let delData = try req.content.decode(Transaction.DEL.self)
+        try await Transaction.query(on: req.db)
+            .filter(\.$consumer.$id == user.requireID())
+            .filter(\.$id == delData.id)
+            .delete()
+        return Response(status: .ok)
     }
 }

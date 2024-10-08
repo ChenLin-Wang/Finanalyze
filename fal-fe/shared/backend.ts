@@ -8,8 +8,10 @@ const backend_defaults = {
             register: '/register',
             login: '/login'
         },
-        dashboard: {
-            info: '/user/info'
+        userspace: {
+            info: '/userspace/info',
+            transactions: '/userspace/transactions',
+            files: '/userspace/files'
         }
     }
 }
@@ -34,7 +36,7 @@ export type InfoGetRes = {
     firstName?: string
     lastName?: string
     middleName?: string
-    avatar?: string
+    avatar: string
     age?: number
     gender: string
     birthday?: string
@@ -43,6 +45,17 @@ export type InfoGetRes = {
     course?: string
     yearLvl?: string
     school?: string
+}
+
+export type TransactionRes = {
+    id: string
+    itemName: string
+    itemAmount: number
+    pricePerUnit: number
+    location: string
+    brand?: string
+    category: string
+    transactionDate: string
 }
 
 export type ResError = {
@@ -58,7 +71,7 @@ export type ResError = {
 }
 
 export const BearerFetch = async (url: string, options: any = {}) => {
-    const config = useRuntimeConfig();
+    // const config = useRuntimeConfig();
     options.headers = {
         ...options.headers,
         "Content-Type": "application/json",

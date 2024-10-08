@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { be, BearerFetch, type InfoGetRes, type ResError } from '~/shared/backend';
+import { be, BearerFetch, type TransactionRes, type InfoGetRes, type ResError } from '~/shared/backend';
 import { delay, localClear } from '~/shared/funcs';
-import { globalKeys, Paths } from '~/shared/paths';
+import { getUserSpaceItem, globalKeys, Paths, userSpaceItems } from '~/shared/paths';
 
 export type AlertDatas = {
     info: ResError | string | null,
@@ -26,10 +26,10 @@ provide(globalKeys.dashboardAlertKey, alertDatas)
 provide(globalKeys.dashboardLoadingKey, loading)
 provide(globalKeys.userInfosKey, userInfos)
 
-onBeforeMount(async() => {
+onBeforeMount(async () => {
     loading.value = { sidebar: true, content: true }
     try {
-        const res = await BearerFetch(be.head + be.api.dashboard.info) as InfoGetRes
+        const res = await BearerFetch(be.head + be.api.userspace.info) as InfoGetRes
         alertDatas.value.title = "Welcome!"
         alertDatas.value.type = "success"
         alertDatas.value.info = "Fetch user data successfully!"
@@ -40,7 +40,7 @@ onBeforeMount(async() => {
         let e = err as ResError
         alertDatas.value.title = "Something wrong!"
         alertDatas.value.type = "error"
-        e.data.reason += " Jumping to Home after 3 seconds..."
+        e.data.reason += ", Jumping to Home after 3 seconds..."
         alertDatas.value.info = e
         alertDatas.value.show = true
         userInfos.value = null
@@ -51,34 +51,40 @@ onBeforeMount(async() => {
 })
 
 const router = useRouter()
-router.beforeEach(() => { loading.value.content = true })
-router.afterEach(() => { loading.value.content = false })
+router.beforeEach(() => loading.value.content = true )
+router.afterEach(() => loading.value.content = false)
 
 </script>
 
 <template>
-    <Header />
-    <div style="width: 100%; height: 64px;"></div>
-    <v-container fluid class="pa-0 ma-0">
-        <v-row no-gutters>
-            <v-col class="pa-0 ma-0" cols="auto" style="width: 256px; min-height: calc(100vh - 64px);">
-                <DashboardSidebar v-if="!loading.sidebar" />
-                <v-skeleton-loader v-else color="white" :elevation="0"
-                    class="border mx-auto pa-0 fill-height fill-width"
-                    type="list-item-avatar-two-line, divider, list-item-two-line, divider, list-item-two-line, divider, list-item-two-line, divider, list-item-two-line, divider, list-item-two-line, divider"
-                    style="display: block;"></v-skeleton-loader>
-            </v-col>
-            <v-col cols="auto" style="display: flex;">
-                <v-divider vertical style="height: 100%;"></v-divider>
-            </v-col>
-            <v-col>
-                <Alert :type="alertDatas.type" :title="alertDatas.title" :info="alertDatas.info" v-model:show="alertDatas.show" :timeout="3000"/>
-                <slot v-if="!loading.content" />
-                <v-skeleton-loader v-else color="white" :elevation="0"
-                    class="border mx-auto pa-0 fill-height fill-width" type="image, article, image, table"
-                    style="display: block;"></v-skeleton-loader>
-            </v-col>
-        </v-row>
-
-    </v-container>
+    <v-app-bar color="black" :elevation="0">
+        <Header />
+    </v-app-bar>
+    <v-navigation-drawer class="text-black">
+        <DashboardSidebar v-if="!loading.sidebar" />
+        <v-skeleton-loader v-else color="white" :elevation="0" class="border mx-auto pa-0 fill-height fill-width"
+            type="list-item-avatar-two-line, divider, list-item-two-line, divider, list-item-two-line, divider, list-item-two-line, divider, list-item-two-line, divider, list-item-two-line, divider"
+            style="display: block;"></v-skeleton-loader>
+    </v-navigation-drawer>
+    <v-main>
+        <v-container fluid class="pa-0 ma-0">
+            <v-row no-gutters>
+                <v-col>
+                    <Alert :type="alertDatas.type" :title="alertDatas.title" :info="alertDatas.info"
+                        v-model:show="alertDatas.show" :timeout="3000" />
+                    <slot v-if="!loading.content" />
+                    <v-skeleton-loader v-else color="white" :elevation="0"
+                        class="border mx-auto pa-0 fill-height fill-width" type="image, article, image, table"
+                        style="display: block;"></v-skeleton-loader>
+                </v-col>
+            </v-row>
+        </v-container>
+    </v-main>
 </template>
+
+<style lang="css" scoped>
+* {
+    animation: none !important;
+    transition: none !important;
+}
+</style>

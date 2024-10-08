@@ -36,7 +36,7 @@ const setTimeoutEff = () => {
         <v-alert v-if="info" v-model="show" border="start" close-label="Close Alert" :title="title" :type="type"
             closable>
             {{
-                type === "error" ? (<ResError>info)?.statusCode + ' ' + (<ResError>info)?.data.reason :
+                type === "error" ? `${(<ResError>info)?.statusCode}  (${(<ResError>info)?.data.reason})` :
                     type === "success" ? info : "Unknow"
             }}
         </v-alert>

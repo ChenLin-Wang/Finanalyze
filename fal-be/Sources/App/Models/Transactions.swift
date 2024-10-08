@@ -6,26 +6,26 @@ final class Transaction: DModel, @unchecked Sendable {
     static let schema = TableNames.transactions
 
     enum Category: String, Codable {
-        case food = "food"
-        case clothing = "clothing"
-        case shelter = "shelter"
-        case utilities = "utilities"
-        case transportation = "transportation"
-        case healthcare = "healthcare"
-        case education = "education"
-        case entertainment = "entertainment"
-        case electronics = "electronics"
-        case furniture = "furniture"
-        case householdAppliances = "household_appliances"
-        case personalCareProducts = "personal_care_products"
-        case luxuryGoods = "luxury_goods"
-        case sportsEquipment = "sports_equipment"
-        case travel = "travel"
-        case financialServices = "financial_services"
-        case insurance = "insurance"
-        case communicationDevices = "communication_devices"
-        case subscriptionServices = "subscription_services"
-        case booksAndMedia = "books_and_media"
+        case food = "Food"
+        case clothing = "Clothing"
+        case shelter = "Shelter"
+        case utilities = "Utilities"
+        case transportation = "Transportation"
+        case healthcare = "Healthcare"
+        case education = "Education"
+        case entertainment = "Entertainment"
+        case electronics = "Electronics"
+        case furniture = "Furniture"
+        case householdAppliances = "Household Appliances"
+        case personalCareProducts = "Personal Care Products"
+        case luxuryGoods = "Luxury Goods"
+        case sportsEquipment = "Sports Equipment"
+        case travel = "Travel"
+        case financialServices = "Financial Services"
+        case insurance = "Insurance"
+        case communicationDevices = "Communication Devices"
+        case subscriptionServices = "Subscription Services"
+        case booksAndMedia = "Books and Media"
     }
 
     // number | item name | amount | price per unit | location | brand
@@ -54,6 +54,14 @@ final class Transaction: DModel, @unchecked Sendable {
 
     typealias REQ = User.REQ
 
+    struct DEL: Content, Sendable { var id: UUID }
+
+    struct UPD: Content, Sendable {
+        var id: Transaction.IDValue; var itemName: String; var itemAmount: Int; 
+        var pricePerUnit: Float; var location: String; var brand: String?; 
+        var category: String; var __transactionDate: String
+    }
+
     struct NEW: Content, Sendable { 
         var consumerId: User.IDValue; var itemName: String; var itemAmount: Int; 
         var pricePerUnit: Float; var location: String; var brand: String?; 
@@ -61,7 +69,7 @@ final class Transaction: DModel, @unchecked Sendable {
     }
     
     struct DTO: Content, Sendable { 
-        var itemName: String; var itemAmount: Int; 
+        var id: Transaction.IDValue; var itemName: String; var itemAmount: Int; 
         var pricePerUnit: Float; var location: String; var brand: String?; 
         var category: Category; var transactionDate: Date
     }
@@ -71,7 +79,8 @@ final class Transaction: DModel, @unchecked Sendable {
             let category = Category(rawValue: self.category),
             let transactionDate = self.transactionDate
         else { throw Abort(.badRequest, reason: "Wrong category value") }
-        return DTO(
+        return try DTO(
+            id: self.requireID(),
             itemName: self.itemName,
             itemAmount: self.itemAmount,
             pricePerUnit: self.pricePerUnit,
@@ -83,6 +92,20 @@ final class Transaction: DModel, @unchecked Sendable {
     }
 
     init() {}
+
+    convenience init(consumerId: Transaction.IDValue, data: UPD) throws {
+        guard let category = Category(rawValue: data.category) else { throw Abort(.badRequest, reason: "Wrong category value") }
+        self.init(
+            consumerId: consumerId,
+            itemName: data.itemName,
+            itemAmount: data.itemAmount,
+            pricePerUnit: data.pricePerUnit,
+            location: data.location,
+            brand: data.brand,
+            category: category,
+            transactionDate: ShortDateFormatter().date(from: data.__transactionDate)
+        )
+    }
 
     convenience init(data: NEW) throws {
         guard let category = Category(rawValue: data.category) else { throw Abort(.badRequest, reason: "Wrong category value") }

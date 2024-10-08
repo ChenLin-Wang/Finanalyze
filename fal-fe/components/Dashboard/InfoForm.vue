@@ -43,7 +43,7 @@ const submit = async () => {
 
 const titles = ["Account", "Basic Information", "Personal Information", "School Information"]
 
-// [Label, Required?, Variable Name, Cols, Type, Validation]
+// [Label, Required?, Variable Name, Cols, Type, Disable?, Validation]
 const hintGroups = [
     [["Email", true, "email", "12", "string", true, [emailValidate("Email", false)]],],
     [["User Name", true, "username", "12", "string", false, [strLenValidate(2, "User Name", false)]],],
@@ -102,8 +102,8 @@ const hintGroups = [
                     </v-col>
                 </v-row>
             </div>
-            <v-row class="mt-5 mx-1">
-                <v-btn class="text-none" :disabled="deepEqual(values, infos)" color="white" width="100%"
+            <v-row class="mt-5 mb-3 mx-1">
+                <v-btn class="text-none" :disabled="deepEqual(values, infos, ['bdayDate'])" color="white" width="100%"
                     @click="submit">Submit</v-btn>
             </v-row>
         </v-form>

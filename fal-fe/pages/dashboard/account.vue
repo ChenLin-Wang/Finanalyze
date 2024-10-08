@@ -36,7 +36,7 @@ const submit = async (value: FormValue) => {
     if (vals._bday) { vals._bday = DateToShortStr(new Date(vals._bday)) }
     if (typeof vals.age === "string") vals.age = undefined
     try {
-        const submitRes: InfoGetRes = await BearerFetch(be.head + be.api.dashboard.info, {
+        const submitRes: InfoGetRes = await BearerFetch(be.head + be.api.userspace.info, {
             method: 'POST',
             body: vals
         }) as InfoGetRes
@@ -66,7 +66,5 @@ onMounted(() => {
 </script>
 
 <template>
-    <v-container fluid>
-        <DashboardInfoForm @submit="submit" :infos="toFormValue(infos)"></DashboardInfoForm>
-    </v-container>
+    <DashboardInfoForm @submit="submit" :infos="toFormValue(infos)"></DashboardInfoForm>
 </template>
