@@ -13,6 +13,8 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.65.0"),
         .package(url: "https://github.com/vapor/fluent.git", from: "4.0.0"),
         .package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.0.0"),
+        .package(url: "https://github.com/google/generative-ai-swift", from: "0.5.6"),
+
     ],
     targets: [
         .executableTarget(
@@ -23,6 +25,7 @@ let package = Package(
                 .product(name: "NIOPosix", package: "swift-nio"),
                 .product(name: "Fluent", package: "fluent"),
                 .product(name: "FluentPostgresDriver", package: "fluent-postgres-driver"),
+                .product(name: "GoogleGenerativeAI", package: "generative-ai-swift"),
             ],
             swiftSettings: swiftSettings
         ),
