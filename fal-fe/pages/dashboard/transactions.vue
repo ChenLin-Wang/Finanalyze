@@ -147,7 +147,7 @@ const loadTransactions = async () => {
                 v-model:filter="filters" v-model:search="keyword" v-model:sort="sort" v-model:descending="descending" />
             <DashboardTransactionList v-if="!loading"
                 ref="transactionList" :numPerPage="numPerPage" :transactions="transactions.map(a => toFormValue(a))"
-                @submit="submit" @delete="del" />
+                @submit="submit" @delete="del" deletable />
             <v-skeleton-loader v-else color="white" :elevation="0" class="border mx-auto pa-0 fill-width" type="table"
             style="display: block; height: 460px" />
         </div>

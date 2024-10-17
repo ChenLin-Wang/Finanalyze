@@ -15,9 +15,11 @@
     "@nuxt/image": "^1.8.1",
     "@nuxtjs/google-fonts": "^3.2.0",
     "@nuxtjs/mdc": "^0.9.0",
+    "chart.js": "^4.4.5",
     "google-fonts": "^1.0.0",
     "nuxt": "^3.13.0",
     "vue": "latest",
+    "vue-chartjs": "^5.3.1",
     "vue-router": "latest"
   },
   "devDependencies": {

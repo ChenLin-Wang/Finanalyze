@@ -77,7 +77,6 @@ struct AiChatC: RouteCollection {
             clientRequest.body = .init(data: try JSONSerialization.data(withJSONObject: ["ques": ques]))
         }
         guard answer.status == .ok else { throw Abort(.internalServerError) }
-        print(answer)
         let ans = try answer.content.decode(AiChat.TITLEANS.self)
         return (ans.title, ans.blocked != nil)
     }

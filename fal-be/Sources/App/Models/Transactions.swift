@@ -5,7 +5,7 @@ import SQLKit
 final class Transaction: DModel, @unchecked Sendable {
     static let schema = TableNames.transactions
 
-    enum Category: String, Codable {
+    enum Category: String, Codable, CaseIterable {
         case food = "Food"
         case clothing = "Clothing"
         case shelter = "Shelter"

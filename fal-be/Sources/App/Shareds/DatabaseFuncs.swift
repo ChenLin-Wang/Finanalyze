@@ -1,6 +1,7 @@
 import Fluent
 import SQLKit
 import Vapor
+import FluentPostgresDriver
 
 final class TableNames {
     static let users = "users"
@@ -82,5 +83,20 @@ extension Array {
 extension Array where Element: DModel {
     @Sendable func dtos(req: Request) async throws -> [Element.DTO] {
         try await self.asyncMap { try await $0.dto(req: req) }
+    }
+}
+
+extension PostgresRow {
+    func datas() -> [String: PostgresData] {
+        var row: [String: PostgresData] = [:]
+        for cell in self {
+            row[cell.columnName] = PostgresData(
+                type: cell.dataType,
+                typeModifier: 0,
+                formatCode: cell.format,
+                value: cell.bytes
+            )
+        }
+        return row
     }
 }

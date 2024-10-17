@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { globalKeys } from '~/shared/paths';
+
+
+const barTitle = ref(inject(globalKeys.dashboardBarTitle) as string)
+barTitle.value = "Welcome"
 
 </script>
 
