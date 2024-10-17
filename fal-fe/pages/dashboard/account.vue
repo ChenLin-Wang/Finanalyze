@@ -9,6 +9,9 @@ import { globalKeys } from '~/shared/paths';
 const infos = ref(inject(globalKeys.userInfosKey) as InfoGetRes)
 const alertDatas = ref(inject(globalKeys.dashboardAlertKey) as AlertDatas)
 const contentLoading = ref(inject(globalKeys.dashboardLoadingKey) as LoadingStatus)
+const barTitle = ref(inject(globalKeys.dashboardBarTitle) as string)
+
+barTitle.value = "Account Information"
 
 function toFormValue(info: InfoGetRes): FormValue {
     return {

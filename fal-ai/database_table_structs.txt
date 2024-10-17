@@ -63,6 +63,27 @@ Table structures, only allowed query the following tables, don't query others:
     Foreign-key constraints:
         "user_infos_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id)
 
+\d users;
+                  Table "public.users"
+   Column    |  Type   | Collation | Nullable | Default 
+-------------+---------+-----------+----------+---------
+ id          | uuid    |           | not null | 
+ email       | text    |           | not null | 
+ password    | text    |           | not null | 
+ is_active   | boolean |           | not null | true
+ is_verified | boolean |           | not null | false
+ created_at  | text    |           | not null | 
+ updated_at  | text    |           | not null | 
+Indexes:
+    "users_pkey" PRIMARY KEY, btree (id)
+    "uq:users.email" UNIQUE CONSTRAINT, btree (email)
+Referenced by:
+    TABLE "ai_chats" CONSTRAINT "ai_chats_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id)
+    TABLE "file_uploads" CONSTRAINT "file_uploads_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id)
+    TABLE "password_resets" CONSTRAINT "password_resets_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id)
+    TABLE "tokens" CONSTRAINT "tokens_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id)
+    TABLE "transactions" CONSTRAINT "transactions_consumer_id_fkey" FOREIGN KEY (consumer_id) REFERENCES users(id)
+    TABLE "user_infos" CONSTRAINT "user_infos_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id)
 
 The value of field "category" of table transactions is a enum value, the value must be one of below:
 

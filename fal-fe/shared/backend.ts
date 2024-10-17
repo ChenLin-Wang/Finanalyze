@@ -10,8 +10,15 @@ const backend_defaults = {
         },
         userspace: {
             info: '/userspace/info',
-            transactions: '/userspace/transactions',
-            files: '/userspace/files'
+            transactions: {
+                normal: '/userspace/transactions',
+                all: '/userspace/transactions/all'
+            },
+            files: '/userspace/files',
+            ai: {
+                chats_get: '/userspace/ai',
+                chat: '/userspace/ai/chat'
+            }
         }
     }
 }
@@ -56,6 +63,14 @@ export type TransactionRes = {
     brand?: string
     category: string
     transactionDate: string
+}
+
+export type AiAnsRes = {
+    id: string
+    title: string
+    contents: { role: string, content: string }[]
+    createdAt: string
+    updatedAt: string
 }
 
 export type ResError = {

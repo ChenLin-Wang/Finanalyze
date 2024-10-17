@@ -9,6 +9,7 @@ export const globalKeys = {
     userInfosKey: "user-infos-key",
     dashboardAlertKey: "dashboard-alert-key",
     dashboardLoadingKey: "dashboard-loading-key",
+    dashboardBarTitle: "dashboard-bar-title-key",
     userIdKey: "user-id-key",
 }
 
@@ -28,8 +29,8 @@ export const userSpaceItems = [
         link: "/dashboard/transactions",
         icon: "mdi-shopping-outline"
     }, {
-        title: "AI Analytic",
-        link: "/dashboard/ai_analytic",
+        title: "AI Bot",
+        link: "/dashboard/ai_bot",
         icon: "mdi-google-analytics"
     }, {
         title: "Find",

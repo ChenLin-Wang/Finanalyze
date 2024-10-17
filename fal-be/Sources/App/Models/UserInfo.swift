@@ -59,6 +59,11 @@ final class UserInfo: DModel, @unchecked Sendable {
         var yearLvl: String?; var school: String?
     }
 
+    struct FEW: Content, Sendable {
+        var email: String
+        var username: String
+    }
+
     @Sendable func dto(req: Request) async throws -> DTO { 
         try await self.$user.load(on: req.db)
         guard let gender = Gender(rawValue: self.gender) else { throw Abort(.badRequest, reason: "Wrong gender value") }

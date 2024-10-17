@@ -5,6 +5,7 @@ struct TransactionC: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let transactionRoute = routes.grouped("transactions")
         transactionRoute.get("count", use: getTransactionCount)
+        transactionRoute.get("all", use: getAllTransactions)
         transactionRoute.put(use: newTransaction)
         transactionRoute.get(use: getTransactions)
         transactionRoute.post(use: updateTransaction)
@@ -31,6 +32,28 @@ struct TransactionC: RouteCollection {
             .paginate(for: req).items
             as [Transaction]
         return try await transactions.dtos(req: req)
+    }
+    
+    struct ALLTRANSRES: Content, Sendable {
+        let user: UserInfo.FEW
+        let transactions: [Transaction.DTO]
+    }
+
+    @Sendable func getAllTransactions(req: Request) async throws -> [ALLTRANSRES] {
+        try req.auth.require(User.self)
+        let filter = try req.query.decode(Transaction.FILTER.self)
+        let userInfos = try await UserInfo.query(on: req.db).join(User.self, on: \UserInfo.$user.$id == \User.$id).all().asyncMap { ui async throws -> ALLTRANSRES in
+            ALLTRANSRES(
+                user: try UserInfo.FEW(email: ui.joined(User.self).email, username: ui.username),
+                transactions: try await Transaction.query(on: req.db)
+                    .filter(\.$consumer.$id == ui.joined(User.self).requireID())
+                    .filter(str: filter.filter)
+                    .sort(by: filter.sortBy, descending: filter.sortDescending)
+                    .paginate(for: req).items
+                    .dtos(req: req)
+            )
+        }
+        return userInfos
     }
 
     @Sendable func newTransaction(req: Request) async throws -> Transaction {

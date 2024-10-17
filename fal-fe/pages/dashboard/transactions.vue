@@ -5,6 +5,9 @@ import { be, BearerFetch, type ResError, type TransactionRes } from '~/shared/ba
 import { delay, localClear } from '~/shared/funcs';
 import { globalKeys, Paths } from '~/shared/paths';
 
+const barTitle = ref(inject(globalKeys.dashboardBarTitle) as string)
+barTitle.value = "Transactions"
+
 const alertDatas = ref(inject(globalKeys.dashboardAlertKey) as AlertDatas)
 const transactions = ref<TransactionRes[]>([])
 const loading = ref(true)
@@ -48,7 +51,7 @@ onBeforeMount(async () => await loadTransactions())
 const submit = async (transaction: TransactionValue, i: number) => {
     // loading.value = true
     try {
-        const res = await BearerFetch(be.head + be.api.userspace.transactions, {
+        const res = await BearerFetch(be.head + be.api.userspace.transactions.normal, {
             method: "POST",
             body: transaction
         })
@@ -63,7 +66,7 @@ const submit = async (transaction: TransactionValue, i: number) => {
 
 const del = async (transaction: TransactionValue, i: number) => {
     try {
-        const res = await BearerFetch(be.head + be.api.userspace.transactions, {
+        const res = await BearerFetch(be.head + be.api.userspace.transactions.normal, {
             method: "DELETE",
             body: { id: transaction.id }
         })
@@ -92,9 +95,9 @@ const errHandle = async (e: ResError) => {
     alertDatas.value.info = e
     alertDatas.value.show = true
     transactions.value = []
-    // await delay(3000)
-    // localClear()
-    // useRouter().push(Paths.home)
+    await delay(3000)
+    localClear()
+    useRouter().push(Paths.home)
     loading.value = false
 }
 
@@ -142,16 +145,16 @@ const loadTransactions = async () => {
     if (keyword.value.length > 0) f = [`item_name,contains,${keyword.value}`].concat(f)
     const filterStr = f.join(";")
     try {
-        totalCount.value = await BearerFetch(be.head + be.api.userspace.transactions + "/count?filter=" + filterStr) as number
+        totalCount.value = await BearerFetch(be.head + be.api.userspace.transactions.normal + "/count?filter=" + filterStr) as number
         checkCurPageIndex()
         console.log(be.head +
-            be.api.userspace.transactions +
+            be.api.userspace.transactions.normal +
             `?page=${curPage.value}&per=${numPerPage.value}&total=${pageCount()}` +
             `&sortBy=${filterFieldNames[sort.value as keyof typeof filterFieldNames]}&sortDescending=${descending.value ? 1 : 0}` +
             `&filter=${filterStr}`)
         const res = await BearerFetch(
             be.head +
-            be.api.userspace.transactions +
+            be.api.userspace.transactions.normal +
             `?page=${curPage.value}&per=${numPerPage.value}&total=${pageCount()}` +
             `&sortBy=${filterFieldNames[sort.value as keyof typeof filterFieldNames]}&sortDescending=${descending.value ? 1 : 0}` +
             `&filter=${filterStr}`

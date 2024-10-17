@@ -42,6 +42,7 @@ final class AiChat: DModel, @unchecked Sendable {
         var type: AnswerType
         var text: String?
         var sql: String?
+        var blocked: Bool?
     }
 
     struct NEW: Content, Sendable {
@@ -50,6 +51,7 @@ final class AiChat: DModel, @unchecked Sendable {
 
     struct TITLEANS: Content, Sendable {
         var title: String
+        var blocked: Bool?
     }
 
     struct DTO: Content, Sendable {

@@ -17,6 +17,8 @@ export default defineNuxtConfig({
         }
     },
     modules: [
+        '@nuxt/content',
+        '@nuxtjs/mdc',
         '@nuxtjs/google-fonts',
         (_options, nuxt) => {
             nuxt.hooks.hook('vite:extendConfig', (config) => {
@@ -26,6 +28,17 @@ export default defineNuxtConfig({
         },
         //...
     ],
+    css: [
+        '@/assets/css/github.css'
+    ],  
+    content: {
+        markdown: {
+            anchorLinks: false,
+        },
+        highlight: {
+            theme: 'github-light',
+        }
+    },
     vite: {
         vue: {
             template: {
