@@ -5,6 +5,7 @@ struct TransactionC: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let transactionRoute = routes.grouped("transactions")
         transactionRoute.get("count", use: getTransactionCount)
+        transactionRoute.get("all", "count", use: getAllTransactionCount)
         transactionRoute.get("all", use: getAllTransactions)
         transactionRoute.put(use: newTransaction)
         transactionRoute.get(use: getTransactions)
@@ -22,6 +23,17 @@ struct TransactionC: RouteCollection {
         return count
     }
 
+    @Sendable func getAllTransactionCount(req: Request) async throws -> Int {
+        try req.auth.require(User.self)
+        let filter = try req.query.decode(Transaction.COUNTER.self).filter
+        let count = try await Transaction.query(on: req.db)
+            .join(User.self, on: \Transaction.$consumer.$id == \User.$id)
+            .join(UserInfo.self, on: \UserInfo.$user.$id == \User.$id)
+            .filter(str: filter)
+            .count()
+        return count
+    }
+
     @Sendable func getTransactions(req: Request) async throws -> [Transaction.DTO] {
         let user = try req.auth.require(User.self)
         let filter = try req.query.decode(Transaction.FILTER.self)
@@ -33,27 +45,27 @@ struct TransactionC: RouteCollection {
             as [Transaction]
         return try await transactions.dtos(req: req)
     }
-    
-    struct ALLTRANSRES: Content, Sendable {
-        let user: UserInfo.FEW
-        let transactions: [Transaction.DTO]
-    }
 
-    @Sendable func getAllTransactions(req: Request) async throws -> [ALLTRANSRES] {
+    @Sendable func getAllTransactions(req: Request) async throws -> [Transaction.ALLTRANSRES] {
         try req.auth.require(User.self)
         let filter = try req.query.decode(Transaction.FILTER.self)
-        let userInfos = try await UserInfo.query(on: req.db).join(User.self, on: \UserInfo.$user.$id == \User.$id).all().asyncMap { ui async throws -> ALLTRANSRES in
-            ALLTRANSRES(
-                user: try UserInfo.FEW(email: ui.joined(User.self).email, username: ui.username),
-                transactions: try await Transaction.query(on: req.db)
-                    .filter(\.$consumer.$id == ui.joined(User.self).requireID())
-                    .filter(str: filter.filter)
-                    .sort(by: filter.sortBy, descending: filter.sortDescending)
-                    .paginate(for: req).items
-                    .dtos(req: req)
-            )
-        }
-        return userInfos
+        let transactions = try await Transaction.query(on: req.db)
+            .join(User.self, on: \Transaction.$consumer.$id == \User.$id)
+            .join(UserInfo.self, on: \UserInfo.$user.$id == \User.$id)
+            .filter(str: filter.filter)
+            .sort(by: filter.sortBy, descending: filter.sortDescending)
+            .paginate(for: req).items
+            .asyncMap { trans in
+                try await Transaction.ALLTRANSRES(
+                    user: .init(
+                        email: trans.joined(User.self).email, 
+                        username: trans.joined(UserInfo.self).username,
+                        avatar: trans.joined(UserInfo.self).avatar
+                    ), 
+                    transaction: trans.dto(req: req)
+                ) 
+            }
+        return transactions
     }
 
     @Sendable func newTransaction(req: Request) async throws -> Transaction {

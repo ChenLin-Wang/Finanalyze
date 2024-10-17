@@ -62,6 +62,7 @@ final class UserInfo: DModel, @unchecked Sendable {
     struct FEW: Content, Sendable {
         var email: String
         var username: String
+        var avatar: String
     }
 
     @Sendable func dto(req: Request) async throws -> DTO { 

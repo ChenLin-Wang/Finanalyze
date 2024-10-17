@@ -36,13 +36,5 @@ export const userSpaceItems = [
         title: "Find",
         link: "/dashboard/find",
         icon: "mdi-tag-search-outline"
-    }, {
-        title: "Share",
-        link: "/dashboard/share",
-        icon: "mdi-share-all-outline"
-    }, {
-        title: "Settings",
-        link: "/dashboard/settings",
-        icon: "mdi-cog"
     }
 ]

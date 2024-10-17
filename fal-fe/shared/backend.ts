@@ -73,6 +73,11 @@ export type AiAnsRes = {
     updatedAt: string
 }
 
+export type AllTransRes = {
+    user: { email: string, username: string, avatar: string },
+    transaction: TransactionRes
+}
+
 export type ResError = {
     url: string,
     statusCode: number,

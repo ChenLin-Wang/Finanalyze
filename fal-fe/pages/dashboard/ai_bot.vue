@@ -2,7 +2,6 @@
 import type { AlertDatas } from '~/layouts/default.vue';
 import { be, BearerFetch, type AiAnsRes, type ResError } from '~/shared/backend';
 import { dateFormat } from '~/shared/dateFunctions';
-import { delay, localClear } from '~/shared/funcs';
 import { globalKeys, Paths } from '~/shared/paths';
 
 const alertDatas = ref(inject(globalKeys.dashboardAlertKey) as AlertDatas)
@@ -14,11 +13,8 @@ const chats = ref<AiAnsRes[]>([])
 const chatSideBarLoading = ref(true)
 const chatLoading = ref(true)
 const chatWaiting = ref(false)
-
 const chatView = ref(null)
-
 const newC = ref(true)
-
 const chat = ref({ id: "", title: "", contents: [], createdAt: "", updatedAt: "" } as AiAnsRes)
 
 onBeforeMount(async () => {
@@ -38,9 +34,6 @@ const errHandle = async (e: ResError) => {
     e.data.reason += ", Jumping to Home after 3 seconds..."
     alertDatas.value.info = e
     alertDatas.value.show = true
-    // await delay(3000)
-    // localClear()
-    // useRouter().push(Paths.home)
     chatSideBarLoading.value = false
 }
 

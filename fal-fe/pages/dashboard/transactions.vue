@@ -3,6 +3,7 @@ import type { TransactionValue } from '~/components/Dashboard/TransactionForm.vu
 import type { AlertDatas, LoadingStatus } from '~/layouts/default.vue';
 import { be, BearerFetch, type ResError, type TransactionRes } from '~/shared/backend';
 import { delay, localClear } from '~/shared/funcs';
+import { CompareRelaNames, FilterFieldNames } from '~/shared/parameters';
 import { globalKeys, Paths } from '~/shared/paths';
 
 const barTitle = ref(inject(globalKeys.dashboardBarTitle) as string)
@@ -101,31 +102,6 @@ const errHandle = async (e: ResError) => {
     loading.value = false
 }
 
-const filterFieldNames = {
-    "Name": "item_name",
-    "Unit Price": "item_price",
-    "Amount": "item_amount",
-    "Brand": "item_brand",
-    "Total Price": "item_total_price",
-    "Category": "category",
-    "Date": "date",
-}
-
-const compareRelaNames = {
-    "=": "equal",
-    "!=":"not_equal",
-    "prefix": "prefix",
-    "suffix": "suffix",
-    "contains": "contains",
-    "!prefix": "not_prefix",
-    "!suffix": "not_suffix",
-    "!contains": "not_contains",
-    ">": "greater",
-    "<": "smaller",
-    "≥": "greater_and_equal",
-    "≤": "smaller_and_equal",
-}
-
 const keyword = ref("")
 const filters = ref<string[][]>([])
 
@@ -137,9 +113,9 @@ const checkCurPageIndex = () => {
 
 const loadTransactions = async () => {
     loading.value = true
-    var f = filters.value.map( r => 
-        filterFieldNames[r[0] as keyof typeof filterFieldNames] + "," +
-        compareRelaNames[r[1] as keyof typeof compareRelaNames] + "," +
+    var f = filters.value.map(r =>
+        FilterFieldNames[r[0] as keyof typeof FilterFieldNames] + "," +
+        CompareRelaNames[r[1] as keyof typeof CompareRelaNames] + "," +
         r[2]
     )
     if (keyword.value.length > 0) f = [`item_name,contains,${keyword.value}`].concat(f)
@@ -147,16 +123,11 @@ const loadTransactions = async () => {
     try {
         totalCount.value = await BearerFetch(be.head + be.api.userspace.transactions.normal + "/count?filter=" + filterStr) as number
         checkCurPageIndex()
-        console.log(be.head +
-            be.api.userspace.transactions.normal +
-            `?page=${curPage.value}&per=${numPerPage.value}&total=${pageCount()}` +
-            `&sortBy=${filterFieldNames[sort.value as keyof typeof filterFieldNames]}&sortDescending=${descending.value ? 1 : 0}` +
-            `&filter=${filterStr}`)
         const res = await BearerFetch(
             be.head +
             be.api.userspace.transactions.normal +
             `?page=${curPage.value}&per=${numPerPage.value}&total=${pageCount()}` +
-            `&sortBy=${filterFieldNames[sort.value as keyof typeof filterFieldNames]}&sortDescending=${descending.value ? 1 : 0}` +
+            `&sortBy=${FilterFieldNames[sort.value as keyof typeof FilterFieldNames]}&sortDescending=${descending.value ? 1 : 0}` +
             `&filter=${filterStr}`
         ) as TransactionRes[]
         loading.value = false
@@ -170,18 +141,26 @@ const loadTransactions = async () => {
 </script>
 
 <template>
-    <v-container fluid>
-        <DashboardFilter @search="loadTransactions()" @resort="loadTransactions()" v-model:filter="filters" v-model:search="keyword" v-model:sort="sort" v-model:descending="descending" />
-        <DashboardTransactionList v-if="!loading" ref="transactionList" :numPerPage="numPerPage"
-            :transactions="transactions.map(a => toFormValue(a))" @submit="submit" @delete="del" />
-        <v-skeleton-loader v-else color="white" :elevation="0" class="border mx-auto pa-0 fill-width" type="table"
+    <v-container fluid class="d-flex flex-column" style="height: 100%">
+        <div class="mt-0 pt-1 flex-grow-1" style="overflow: scroll;">
+            <DashboardFilter :with-users="false" @search="loadTransactions()" @resort="loadTransactions()"
+                v-model:filter="filters" v-model:search="keyword" v-model:sort="sort" v-model:descending="descending" />
+            <DashboardTransactionList v-if="!loading"
+                ref="transactionList" :numPerPage="numPerPage" :transactions="transactions.map(a => toFormValue(a))"
+                @submit="submit" @delete="del" />
+            <v-skeleton-loader v-else color="white" :elevation="0" class="border mx-auto pa-0 fill-width" type="table"
             style="display: block; height: 460px" />
-        <v-row class="text-center" no-gutters align="center" justify="center">
+        </div>
+        <v-row class="text-center flex-shrink-0 flex-grow-0" style="height:50px" no-gutters align="center"
+            justify="center">
             <v-col class="mx-0" cols="auto" style="width: 130px;">
-                <v-select hide-details rounded density="compact" label="# of per Page" variant="solo" v-model="numPerPage" @update:model-value="loadTransactions()" :items="[5, 10, 15, 20, 30, 40, 50, 75, 100, 150, 200, 300, 500, 1000]"/>
+                <v-select hide-details rounded density="compact" label="# of per Page" variant="solo"
+                    v-model="numPerPage" @update:model-value="loadTransactions()"
+                    :items="[5, 10, 15, 20, 30, 40, 50, 75, 100, 150, 200, 300, 500, 1000]" />
             </v-col>
             <v-col class="mx-0">
-                <v-pagination class="mx-0" v-model="curPage" @update:modelValue="loadTransactions()" rounded="shaped" :length="pageCount()"/>
+                <v-pagination class="mx-0" v-model="curPage" @update:modelValue="loadTransactions()" rounded="shaped"
+                    :length="pageCount()" />
             </v-col>
         </v-row>
     </v-container>

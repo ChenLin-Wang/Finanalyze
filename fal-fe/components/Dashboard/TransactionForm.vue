@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { VForm } from 'vuetify/components';
 import { deepCopy, deepEqual } from '~/shared/funcs';
-import { CategoryIcons } from '~/shared/TransactionCategories';
+import { CategoryIcons } from '~/shared/parameters';
 import { numValidate, requireValidate } from '~/shared/validations';
 
 const emit = defineEmits<{ 
@@ -18,12 +18,20 @@ export type TransactionValue = {
     brand?: string
     category: string
     __transactionDate: string
+    user?: {
+        email: string,
+        username: string,
+        avatar: string
+    }
 }
 
-const props = defineProps<{
-    transaction: TransactionValue,
+const props = withDefaults(defineProps<{
+    transaction: TransactionValue
+    editable: boolean
     i: number
-}>()
+}>(), {
+    editable: true
+})
 
 const form = ref<VForm | null>(null);
 const values = ref<TransactionValue>(deepCopy(props.transaction))
@@ -74,7 +82,7 @@ const hintGroups = [
                             v-model="<any>values[<keyof TransactionValue>hint[2]]" :items="hint[7] as Array<string>"
                             :type="typeof values[<keyof TransactionValue>hint[2]]" :disabled="<boolean>hint[5]"
                             :rules="(hint[1] ? [requireValidate('string', <string>hint[0])] : []).concat(<Array<(v: any) => string | true>>hint[6])"
-                            density="comfortable">
+                            density="comfortable" :readonly="!editable">
                         </v-select>
                         <DateField v-else-if="<string>hint[4] === 'date'"
                             :label="<string>hint[0] + (hint[1] ? ' *' : '')"
@@ -82,25 +90,25 @@ const hintGroups = [
                             v-model:date="<Date>values[<keyof FormValue>hint[7]]" :disabled="<boolean>hint[5]"
                             :min="(<number[]>hint[8])[0] ? (new Date(Date.parse(new Date().toString()) + (<number[]>hint[8])[0] * 1000)) : undefined"
                             :max="(<number[]>hint[8])[1] ? (new Date(Date.parse(new Date().toString()) + (<number[]>hint[8])[1] * 1000)) : undefined"
-                            variant="filled" :rules=" /* @ts-ignore */hint[6]" density="comfortable">
+                            variant="filled" :rules=" /* @ts-ignore */hint[6]" density="comfortable" :readonly="!editable">
                         </DateField>
                         <v-text-field v-else-if="<string>hint[4] === 'string'"
                             :label="<string>hint[0] + (hint[1] ? ' *' : '')"
                             v-model="values[<keyof TransactionValue>hint[2]]" type="string" :disabled="<boolean>hint[5]"
                             :rules="(hint[1] ? [requireValidate('string', <string>hint[0])] : []).concat(<Array<(v: any) => string | true>>hint[6])"
-                            density="comfortable">
+                            density="comfortable" :readonly="!editable">
                         </v-text-field>
                         <v-text-field v-else-if="<string>hint[4] === 'number'"
                             :label="<string>hint[0] + (hint[1] ? ' *' : '')"
                             v-model.number="values[<keyof TransactionValue>hint[2]]" type="number"
                             :disabled="<boolean>hint[5]"
                             :rules="(hint[1] ? [requireValidate('string', <string>hint[0])] : []).concat(<Array<(v: any) => string | true>>hint[6])"
-                            density="comfortable">
+                            density="comfortable" :readonly="!editable">
                         </v-text-field>
                     </v-col>
                 </v-row>
             </div>
-            <v-row class="my-1 mx-0" no-gutters>
+            <v-row v-if="editable" class="my-1 mx-0" no-gutters>
                 <v-col class="px-1" cols="6">
                     <v-btn class="text-none" :disabled="deepEqual(values, transaction, ['transactionDate'])" color="white" width="100%"
                     @click="submit">Submit</v-btn>
