@@ -18,6 +18,12 @@ const backend_defaults = {
             ai: {
                 chats_get: '/userspace/ai',
                 chat: '/userspace/ai/chat'
+            },
+            overview: {
+                summary: "/userspace/overview/summary",
+                timeline: "/userspace/overview/timeline",
+                category: "/userspace/overview/category",
+                item: "/userspace/overview/item"
             }
         }
     }
@@ -73,9 +79,30 @@ export type AiAnsRes = {
     updatedAt: string
 }
 
+export type SummaryRes = {
+    totalCost: number
+    totalCount: number
+    currentMonthCost: number
+    currentMonthCount: number
+    lastMonthCost: number
+    lastMonthCount: number
+}
+
 export type AllTransRes = {
     user: { email: string, username: string, avatar: string },
     transaction: TransactionRes
+}
+
+export type TimelineRes = {
+    date: string
+    costWeight: number
+    countWeight: number
+}
+
+export type CategoryRes = {
+    name: string
+    costWeight: number
+    countWeight: number
 }
 
 export type ResError = {

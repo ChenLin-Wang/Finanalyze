@@ -33,12 +33,12 @@ const props = withDefaults(defineProps<{
     max?: Date,
     variant?: "filled" | "underlined" | "outlined" | "plain" | "solo" | "solo-inverted" | "solo-filled",
     rules?: ((v: Date) => true | string)[],
-    readonly?: boolean
+    readonly?: boolean,
 }>(), {
     rounded: false,
     density: 'default',
     label: "",
-    variant: "underlined",
+    variant: "filled",
     readonly: false
 })
 // @ts-ignore

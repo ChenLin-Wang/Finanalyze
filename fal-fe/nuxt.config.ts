@@ -13,8 +13,12 @@ export default defineNuxtConfig({
     },
     googleFonts: {
         families: {
-            'Protest Guerrilla': true
-        }
+            'Protest Guerrilla': true,
+            'Roboto Slab': true,
+            'Playwrite GB S': true,
+            'Libre Baskerville': true,
+        },
+        display: 'swap',
     },
     modules: [
         '@nuxt/content',
@@ -30,7 +34,7 @@ export default defineNuxtConfig({
     ],
     css: [
         '@/assets/css/github.css'
-    ],  
+    ], 
     content: {
         markdown: {
             anchorLinks: false,
@@ -42,8 +46,8 @@ export default defineNuxtConfig({
     vite: {
         vue: {
             template: {
-                transformAssetUrls,
-            },
+                transformAssetUrls,             
+            }
         },
     },
 })

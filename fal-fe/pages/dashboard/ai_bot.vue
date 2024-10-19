@@ -6,8 +6,9 @@ import { globalKeys, Paths } from '~/shared/paths';
 
 const alertDatas = ref(inject(globalKeys.dashboardAlertKey) as AlertDatas)
 const barTitle = ref(inject(globalKeys.dashboardBarTitle) as string)
+const sidebarStatus = ref(inject(globalKeys.dashboardSidebarStatus) as boolean)
 
-barTitle.value = "Ai Bot"
+barTitle.value = ""
 
 const chats = ref<AiAnsRes[]>([])
 const chatSideBarLoading = ref(true)
@@ -16,6 +17,11 @@ const chatWaiting = ref(false)
 const chatView = ref(null)
 const newC = ref(true)
 const chat = ref({ id: "", title: "", contents: [], createdAt: "", updatedAt: "" } as AiAnsRes)
+const chatListStatus = ref(false)
+
+const emit = defineEmits<{
+    (e: "sidebarToggle"): void
+}>()
 
 onBeforeMount(async () => {
     chatSideBarLoading.value = true
@@ -70,7 +76,7 @@ const send = async (text: string) => {
 
     chat.value.contents.push({ role: "user", content: text });
     (chatView.value as any).scrollToBottom()
-    chats.value.filter( a => a.id === chat.value.id )[0].updatedAt = dateFormat(Date())
+    chats.value.filter(a => a.id === chat.value.id)[0].updatedAt = dateFormat(Date())
     try {
         const res = await BearerFetch(be.head + be.api.userspace.ai.chat, {
             method: "POST",
@@ -90,7 +96,7 @@ const del = async (id: string) => {
             method: "DELETE",
             body: { id: id }
         }) as string
-        chats.value = chats.value.filter( a => a.id !== id );
+        chats.value = chats.value.filter(a => a.id !== id);
         if (chat.value.id === id) newC.value = true
     } catch (err) {
         errHandle(err as ResError)
@@ -100,14 +106,27 @@ const del = async (id: string) => {
 </script>
 
 <template>
-    <v-row class="fill-height" no-gutters>
+    <v-row no-gutters>
+        <v-col cols="auto">
+            <v-btn @click="sidebarStatus = !sidebarStatus" icon="mdi-dock-left" variant="text" />
+        </v-col>
+        <v-col>
+            <v-card-title class="ml-1 pl-1"><strong>Ai Bot</strong></v-card-title>
+        </v-col>
+        <v-col cols="auto">
+            <v-btn icon="mdi-dock-right" @click="chatListStatus = !chatListStatus" variant="text" />
+        </v-col>
+    </v-row>
+    <v-divider />
+    <v-row style="height: calc(100% - 49px)" no-gutters>
         <v-col>
             <DashboardAiChat ref="chatView" :new-chat="newC" :chat="chat" v-model:waiting="chatWaiting"
                 :loading="chatLoading" @send="send" />
         </v-col>
-        <v-divider vertical />
-        <v-col cols="auto" style="width: 250px">
-            <DashboardAiChatList :chats="chats" :loading="false" @chat-selected="chatSelected" @new-chat="newC = true" @delete="del"/>
+        <v-divider v-if="chatListStatus" vertical />
+        <v-col v-if="chatListStatus" cols="auto" style="width: 250px">
+            <DashboardAiChatList :chats="chats" :loading="false" @chat-selected="chatSelected" @new-chat="newC = true"
+                @delete="del" />
         </v-col>
     </v-row>
 </template>

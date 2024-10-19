@@ -141,17 +141,18 @@ const loadTransactions = async () => {
 </script>
 
 <template>
-    <v-container fluid class="d-flex flex-column" style="height: 100%">
-        <div class="mt-0 pt-1 flex-grow-1" style="overflow: scroll;">
+    <v-container fluid class="d-flex flex-column pa-0" style="height: 100%">
+        <div class="mt-0 pt-1 flex-grow-1 pa-3" style="overflow: scroll;">
             <DashboardFilter :with-users="false" @search="loadTransactions()" @resort="loadTransactions()"
                 v-model:filter="filters" v-model:search="keyword" v-model:sort="sort" v-model:descending="descending" />
             <DashboardTransactionList v-if="!loading"
                 ref="transactionList" :numPerPage="numPerPage" :transactions="transactions.map(a => toFormValue(a))"
                 @submit="submit" @delete="del" deletable />
             <v-skeleton-loader v-else color="white" :elevation="0" class="border mx-auto pa-0 fill-width" type="table"
-            style="display: block; height: 460px" />
+            style="display: block; height: 446px" />
         </div>
-        <v-row class="text-center flex-shrink-0 flex-grow-0" style="height:50px" no-gutters align="center"
+        <v-divider />
+        <v-row class="text-center flex-shrink-0 flex-grow-0 px-3" style="height:64px" no-gutters align="center"
             justify="center">
             <v-col class="mx-0" cols="auto" style="width: 130px;">
                 <v-select hide-details rounded density="compact" label="# of per Page" variant="solo"

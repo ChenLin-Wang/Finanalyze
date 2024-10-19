@@ -39,7 +39,7 @@ const del = (id: string) => emit("delete", id)
                 style="height: 0px" />
         </div>
         <v-divider />
-        <div class="actions flex-shrink-0 px-3" style="padding-top: 14px; padding-bottom: 14px">
+        <div class="flex-shrink-0 px-3" style="padding-top: 14px; padding-bottom: 14px">
             <v-btn rounded variant="elevated" style="width: 100%;" @click="newChat"> New chat</v-btn>
         </div>
     </v-container>

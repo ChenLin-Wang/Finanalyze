@@ -10,6 +10,7 @@ export const globalKeys = {
     dashboardAlertKey: "dashboard-alert-key",
     dashboardLoadingKey: "dashboard-loading-key",
     dashboardBarTitle: "dashboard-bar-title-key",
+    dashboardSidebarStatus: "dashboard-sidebar-status-key",
     userIdKey: "user-id-key",
 }
 
