@@ -1,0 +1,444 @@
+:root {
+    --side-bar-bg-color: #fafafa;
+    --control-text-color: #777;
+}
+
+@include-when-export url(https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext);
+
+/* open-sans-regular - latin-ext_latin */
+@font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Open Sans Regular'), local('OpenSans-Regular'), url('./github/open-sans-v17-latin-ext_latin-regular.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* open-sans-italic - latin-ext_latin */
+@font-face {
+    font-family: 'Open Sans';
+    font-style: italic;
+    font-weight: normal;
+    src: local('Open Sans Italic'), local('OpenSans-Italic'), url('./github/open-sans-v17-latin-ext_latin-italic.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* open-sans-700 - latin-ext_latin */
+@font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: bold;
+    src: local('Open Sans Bold'), local('OpenSans-Bold'), url('./github/open-sans-v17-latin-ext_latin-700.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* open-sans-700italic - latin-ext_latin */
+@font-face {
+    font-family: 'Open Sans';
+    font-style: italic;
+    font-weight: bold;
+    src: local('Open Sans Bold Italic'), local('OpenSans-BoldItalic'), url('./github/open-sans-v17-latin-ext_latin-700italic.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+.markdown-content html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+}
+
+.markdown-content .markdown-contentbody {
+    font-family: "Open Sans", "Clear Sans", "Helvetica Neue", Helvetica, Arial, 'Segoe UI Emoji', sans-serif;
+    color: rgb(51, 51, 51);
+    line-height: 1.6;
+}
+
+.markdown-content #write {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 30px;
+    padding-bottom: 100px;
+}
+
+#write>ul:first-child,
+#write>ol:first-child {
+    margin-top: 30px;
+}
+
+a {
+    color: #4183C4;
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+    position: relative;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+    line-height: 1.4;
+    cursor: text;
+}
+
+.markdown-content h1:hover a.anchor,
+.markdown-content h2:hover a.anchor,
+.markdown-content h3:hover a.anchor,
+.markdown-content h4:hover a.anchor,
+.markdown-content h5:hover a.anchor,
+.markdown-content h6:hover a.anchor {
+    text-decoration: none;
+}
+
+.markdown-content h1 tt,
+.markdown-content h1 code {
+    font-size: inherit;
+}
+
+.markdown-content h2 tt,
+.markdown-content h2 code {
+    font-size: inherit;
+}
+
+.markdown-content h3 tt,
+.markdown-content h3 code {
+    font-size: inherit;
+}
+
+.markdown-content h4 tt,
+.markdown-content h4 code {
+    font-size: inherit;
+}
+
+.markdown-content h5 tt,
+.markdown-content h5 code {
+    font-size: inherit;
+}
+
+.markdown-content h6 tt,
+.markdown-content h6 code {
+    font-size: inherit;
+}
+
+.markdown-content h1 {
+    font-size: 2.25em;
+    line-height: 1.2;
+    border-bottom: 1px solid #eee;
+}
+
+.markdown-content h2 {
+    font-size: 1.75em;
+    line-height: 1.225;
+    border-bottom: 1px solid #eee;
+}
+
+/*@media print {
+    .typora-export h1,
+    .typora-export h2 {
+        border-bottom: none;
+        padding-bottom: initial;
+    }
+
+    .typora-export h1::after,
+    .typora-export h2::after {
+        content: "";
+        display: block;
+        height: 100px;
+        margin-top: -96px;
+        border-top: 1px solid #eee;
+    }
+}*/
+
+.markdown-content h3 {
+    font-size: 1.5em;
+    line-height: 1.43;
+}
+
+.markdown-content h4 {
+    font-size: 1.25em;
+}
+
+.markdown-content h5 {
+    font-size: 1em;
+}
+
+.markdown-content h6 {
+    font-size: 1em;
+    color: #777;
+}
+
+.markdown-content p,
+.markdown-content blockquote,
+.markdown-content ul,
+.markdown-content ol,
+.markdown-content dl,
+.markdown-content table {
+    margin: 0.8em 0;
+}
+
+.markdown-content li>ol,
+.markdown-content li>ul {
+    margin: 0 0;
+}
+
+.markdown-content hr {
+    height: 2px;
+    padding: 0;
+    margin: 16px 0;
+    background-color: #e7e7e7;
+    border: 0 none;
+    overflow: hidden;
+    box-sizing: content-box;
+}
+
+.markdown-content li p.first {
+    display: inline-block;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    padding-left: 30px;
+}
+
+.markdown-content ul:first-child,
+.markdown-content ol:first-child {
+    margin-top: 0;
+}
+
+.markdown-content ul:last-child,
+.markdown-content ol:last-child {
+    margin-bottom: 0;
+}
+
+.markdown-content blockquote {
+    border-left: 4px solid #dfe2e5;
+    padding: 0 15px;
+    color: #777777;
+}
+
+.markdown-content blockquote blockquote {
+    padding-right: 0;
+}
+
+.markdown-content table {
+    padding: 0;
+    word-break: initial;
+}
+
+.markdown-content table tr {
+    border: 1px solid #dfe2e5;
+    margin: 0;
+    padding: 0;
+}
+
+.markdown-content table tr:nth-child(2n),
+.markdown-content thead {
+    background-color: #f8f8f8;
+}
+
+.markdown-content table th {
+    font-weight: bold;
+    border: 1px solid #dfe2e5;
+    border-bottom: 0;
+    margin: 0;
+    padding: 6px 13px;
+}
+
+.markdown-content table td {
+    border: 1px solid #dfe2e5;
+    margin: 0;
+    padding: 6px 13px;
+}
+
+.markdown-content table th:first-child,
+.markdown-content table td:first-child {
+    margin-top: 0;
+}
+
+.markdown-content table th:last-child,
+.markdown-content table td:last-child {
+    margin-bottom: 0;
+}
+
+.markdown-content .CodeMirror-lines {
+    padding-left: 4px;
+}
+
+.markdown-content .code-tooltip {
+    box-shadow: 0 1px 1px 0 rgba(0, 28, 36, .3);
+    border-top: 1px solid #eef2f2;
+}
+
+.markdown-content .md-fences,
+.markdown-content code,
+.markdown-content tt {
+    border: 1px solid #e7eaed;
+    background-color: #f8f8f8;
+    border-radius: 3px;
+    padding: 0;
+    padding: 2px 4px 0px 4px;
+    font-size: 0.9em;
+}
+
+.markdown-content code {
+    background-color: #f3f4f4;
+    padding: 0 2px 0 2px;
+}
+
+.markdown-content .md-fences {
+    margin-bottom: 15px;
+    margin-top: 15px;
+    padding-top: 8px;
+    padding-bottom: 6px;
+}
+
+
+.markdown-content .md-task-list-item>input {
+    margin-left: -1.3em;
+}
+
+@media print {
+    html {
+        font-size: 13px;
+    }
+
+    pre {
+        page-break-inside: avoid;
+        word-wrap: break-word;
+    }
+}
+
+.markdown-content .md-fences {
+    background-color: #f8f8f8;
+}
+
+.markdown-content #write pre.md-meta-block {
+    padding: 1rem;
+    font-size: 85%;
+    line-height: 1.45;
+    background-color: #f7f7f7;
+    border: 0;
+    border-radius: 3px;
+    color: #777777;
+    margin-top: 0 !important;
+}
+
+.markdown-content .mathjax-block>.code-tooltip {
+    bottom: .375rem;
+}
+
+.markdown-content .md-mathjax-midline {
+    background: #fafafa;
+}
+
+.markdown-content #write>h3.md-focus:before {
+    left: -1.5625rem;
+    top: .375rem;
+}
+
+.markdown-content #write>h4.md-focus:before {
+    left: -1.5625rem;
+    top: .285714286rem;
+}
+
+.markdown-content #write>h5.md-focus:before {
+    left: -1.5625rem;
+    top: .285714286rem;
+}
+
+.markdown-content #write>h6.md-focus:before {
+    left: -1.5625rem;
+    top: .285714286rem;
+}
+
+.markdown-content .md-image>.md-meta {
+    /*border: 1px solid #ddd;*/
+    border-radius: 3px;
+    padding: 2px 0px 0px 4px;
+    font-size: 0.9em;
+    color: inherit;
+}
+
+.markdown-content .md-tag {
+    color: #a7a7a7;
+    opacity: 1;
+}
+
+.markdown-content .md-toc {
+    margin-top: 20px;
+    padding-bottom: 20px;
+}
+
+.markdown-content .sidebar-tabs {
+    border-bottom: none;
+}
+
+.markdown-content #typora-quick-open {
+    border: 1px solid #ddd;
+    background-color: #f8f8f8;
+}
+
+.markdown-content #typora-quick-open-item {
+    background-color: #FAFAFA;
+    border-color: #FEFEFE #e5e5e5 #e5e5e5 #eee;
+    border-style: solid;
+    border-width: 1px;
+}
+
+/** focus mode */
+.markdown-content .on-focus-mode blockquote {
+    border-left-color: rgba(85, 85, 85, 0.12);
+}
+
+.markdown-content header,
+.markdown-content .context-menu,
+.markdown-content .megamenu-content,
+.markdown-content footer {
+    font-family: "Segoe UI", "Arial", sans-serif;
+}
+
+.markdown-content .file-node-content:hover .file-node-icon,
+.markdown-content .file-node-content:hover .file-node-open-state {
+    visibility: visible;
+}
+
+.markdown-content .mac-seamless-mode #typora-sidebar {
+    background-color: #fafafa;
+    background-color: var(--side-bar-bg-color);
+}
+
+.markdown-content .mac-os #write {
+    caret-color: AccentColor;
+}
+
+.markdown-content .md-lang {
+    color: #b4654d;
+}
+
+/*.html-for-mac {
+    --item-hover-bg-color: #E6F0FE;
+}*/
+
+.markdown-content #md-notification .btn {
+    border: 0;
+}
+
+.markdown-content .dropdown-menu .divider {
+    border-color: #e5e5e5;
+    opacity: 0.4;
+}
+
+.markdown-content .ty-preferences .window-content {
+    background-color: #fafafa;
+}
+
+.markdown-content .ty-preferences .nav-group-item.active {
+    color: white;
+    background: #999;
+}
+
+.markdown-content .menu-item-container a.menu-style-btn {
+    background-color: #f5f8fa;
+    background-image: linear-gradient(180deg, hsla(0, 0%, 100%, 0.8), hsla(0, 0%, 100%, 0));
+}

@@ -1,0 +1,21 @@
+You can response with JSON 
+
+   - If an SQL query is required, you must construct one or more SQL queries (separated by semicolons) and respond in the format:
+   
+   {
+     "type": "sql",
+     "sql": "<SQL query 1>; <SQL query 2>; ..."
+   }
+
+   so the sql server will return the sql result as JSON for your request: { "raw_sql_result": "<TEXT format query result>", "prompt": "<Prompt of what the format you will use to reply to this question>" }
+   
+   - If no SQL query is needed, you should respond directly with the text response:
+
+   {
+     "type": "text",
+     "text": "<AI's response in Markdown format, Make sure all escapes are escaped(for JSON.parse()), like all newline characters are escaped as \n>"
+   }
+
+   Make sure it's only one line!
+   Make sure your markdown responses are sufficiently escaped so they can be processed correctly by JSON.parse , otherwise the consequences can be disastrous!
+   Don't put any Anchor link inside the markdown output, like [go to](#tag)

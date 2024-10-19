@@ -20,3 +20,30 @@ export const CategoryIcons = {
     "Subscription Services": { icon: "mdi-card-text", color: "#FF8C00" }, // 暗橙色
     "Books and Media": { icon: "mdi-book-open", color: "#DC143C" },     // 猩红色
 };
+
+export const FilterFieldNames = {
+    "Name": "item_name",
+    "Unit Price": "item_price",
+    "Amount": "item_amount",
+    "Brand": "item_brand",
+    "Total Price": "item_total_price",
+    "Category": "category",
+    "Date": "date",
+    "User Name": "username",
+    "Email": "email",
+}
+
+export const CompareRelaNames = {
+    "=": "equal",
+    "!=": "not_equal",
+    "prefix": "prefix",
+    "suffix": "suffix",
+    "contains": "contains",
+    "!prefix": "not_prefix",
+    "!suffix": "not_suffix",
+    "!contains": "not_contains",
+    ">": "greater",
+    "<": "smaller",
+    "≥": "greater_and_equal",
+    "≤": "smaller_and_equal",
+}

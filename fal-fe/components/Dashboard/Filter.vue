@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CategoryIcons } from '~/shared/TransactionCategories';
+import { CategoryIcons } from '~/shared/parameters';
 import { numValidate, requireValidate } from '~/shared/validations';
 import DateField from '../DateField.vue';
 
@@ -7,11 +7,18 @@ const emit = defineEmits<{
     (e: "search"): void,
     (e: "resort"): void
 }>()
+
+const props = withDefaults(defineProps<{
+    withUsers: boolean
+}>(), {
+    withUsers: false
+})
+
 const filter = defineModel<string[][]>("filter")
 const search = defineModel<string>("search")
 const sort = defineModel<string>("sort")
 const descending = defineModel<boolean>("descending")
-const fields = {
+var fields = {
     "Name": 
         [["=", "!=", "prefix", "suffix", "contains", "!prefix", "!suffix", "!contains"], "item_name", "string"],
     "Brand": 
@@ -25,7 +32,14 @@ const fields = {
     "Category": 
         [["=", "!="], "category", "selector", Object.keys(CategoryIcons).sort()],
     "Date": 
-        [["=", "!=", ">", "<", "≥", "≤"], "date", "date"],
+        [["=", "!=", ">", "<", "≥", "≤"], "date", "date"]
+}
+
+if (props.withUsers) {
+    /* @ts-ignore */
+    fields["User Name"] = [["=", "!=", "prefix", "suffix", "contains", "!prefix", "!suffix", "!contains"], "username", "string"]
+    /* @ts-ignore */
+    fields["Email"] = [["=", "!=", "prefix", "suffix", "contains", "!prefix", "!suffix", "!contains"], "email", "string"]
 }
 
 const fieldChange = (value: string, i: number) => {

@@ -1,14 +1,17 @@
 <script setup lang="ts">
 
-import { CategoryIcons } from '~/shared/TransactionCategories';
+import { CategoryIcons } from '~/shared/parameters';
 import type { TransactionValue } from './TransactionForm.vue';
 import { deepCopy, numberArray } from '~/shared/funcs';
 import { DateToShortStr } from '~/shared/dateFunctions';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     transactions: TransactionValue[]
     numPerPage: number
-}>()
+    deletable: boolean
+}>(), {
+    deletable: true
+})
 
 const emit = defineEmits<{
     (e: "submit", transaction: TransactionValue, i: number): void,
@@ -42,32 +45,41 @@ defineExpose({ closeAllDetails })
         <v-divider />
         <div v-for="(transaction, i) in transactions" :key="i">
             <v-row nogutters align="center" justify="center">
-                <v-col class="mx-0 px-0">
+                <v-col>
                     <v-list-item @click="showAndHide(i)"
                         :subtitle="`${transaction.__transactionDate}  ${transaction.category}`"
                         :title="transaction.brand ? `${transaction.itemName} (${transaction.brand})` : transaction.itemName">
                         <template v-slot:prepend>
                             <v-avatar :color="CategoryIcons[transaction.category as keyof typeof CategoryIcons].color">
-                                <v-icon>{{ CategoryIcons[transaction.category as keyof typeof CategoryIcons].icon
-                                    }}</v-icon>
+                                <v-icon>{{ CategoryIcons[transaction.category as keyof typeof CategoryIcons].icon }}</v-icon>
                             </v-avatar>
                         </template>
                         <template v-slot:append>
-                            <h4>{{ `${transaction.itemAmount} &times; &#8369;${transaction.pricePerUnit} = ` }}</h4>
-                            <h4 class="text-red">{{ `&#8369;${Math.round(transaction.itemAmount *
-                                transaction.pricePerUnit *
-                                100) / 100}` }}</h4>
+                            <h4>{{ `${transaction.itemAmount} &times;&#8369;${transaction.pricePerUnit} = ` }}</h4>
+                            <h4 class="text-red">{{ `&#8369;${Math.round(transaction.itemAmount * transaction.pricePerUnit * 100) / 100}` }}</h4>
+                            <v-divider v-if="!deletable" vertical class="mx-3"/>
+                            <div v-if="!deletable" class="text-end mr-3">
+                                <v-row no-gutters class="pa-0 ma-0">
+                                    <v-col class="pa-0 ma-0">
+                                        <h5>{{ transaction.user?.username }}</h5>
+                                        <h5>{{ transaction.user?.email }}</h5>
+                                    </v-col>
+                                </v-row>
+                            </div>
+                            <v-avatar v-if="!deletable" style="max-width: 300px;">
+                                <v-img :alt="transaction.user?.username" :src="transaction.user?.avatar"></v-img>
+                            </v-avatar>
                         </template>
                     </v-list-item>
                 </v-col>
-                <v-col cols="auto" class="ml-0 pl-0">
+                <v-col v-if="deletable" cols="auto" class="ml-0 pl-0">
                     <v-btn :color="CategoryIcons[transaction.category as keyof typeof CategoryIcons].color"
                         @click="del(transaction, i)" icon="mdi-delete" variant="text"></v-btn>
                 </v-col>
             </v-row>
             <v-divider />
-            <dashboard-transaction-form v-if="showDetails[i]" @submit="submit" @delete="del" :transaction="transaction"
-                :i="i" />
+            <dashboard-transaction-form :editable="deletable" v-if="showDetails[i]" @submit="submit" @delete="del"
+                :transaction="transaction" :i="i" />
             <v-divider v-if="showDetails[i]" />
         </div>
     </v-list>

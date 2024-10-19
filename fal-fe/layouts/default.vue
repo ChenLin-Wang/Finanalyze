@@ -21,9 +21,13 @@ const alertDatas = ref<AlertDatas>({
 })
 
 const userInfos = ref<InfoGetRes | null>(null)
+const barTitle = ref("Account Information")
+const sidebarStatus = ref(false)
 
 provide(globalKeys.dashboardAlertKey, alertDatas)
 provide(globalKeys.dashboardLoadingKey, loading)
+provide(globalKeys.dashboardBarTitle, barTitle)
+provide(globalKeys.dashboardSidebarStatus, sidebarStatus)
 provide(globalKeys.userInfosKey, userInfos)
 
 onBeforeMount(async () => {
@@ -51,7 +55,7 @@ onBeforeMount(async () => {
 })
 
 const router = useRouter()
-router.beforeEach(() => loading.value.content = true )
+router.beforeEach(() => loading.value.content = true)
 router.afterEach(() => loading.value.content = false)
 
 </script>
@@ -60,11 +64,11 @@ router.afterEach(() => loading.value.content = false)
     <v-app-bar color="black" :elevation="0">
         <Header />
     </v-app-bar>
-    <v-navigation-drawer class="text-black">
+    <v-navigation-drawer v-model="sidebarStatus" class="text-black">
         <DashboardSidebar v-if="!loading.sidebar" />
         <v-skeleton-loader v-else color="white" :elevation="0" class="border mx-auto pa-0 fill-height fill-width"
             type="list-item-avatar-two-line, divider, list-item-two-line, divider, list-item-two-line, divider, list-item-two-line, divider, list-item-two-line, divider, list-item-two-line, divider"
-            style="display: block;"></v-skeleton-loader>
+            style="display: block;" />
     </v-navigation-drawer>
     <v-main>
         <v-container fluid class="pa-0 ma-0">
@@ -72,10 +76,21 @@ router.afterEach(() => loading.value.content = false)
                 <v-col>
                     <Alert :type="alertDatas.type" :title="alertDatas.title" :info="alertDatas.info"
                         v-model:show="alertDatas.show" :timeout="3000" />
-                    <slot v-if="!loading.content" />
+                    <v-row v-if="barTitle !== ''" no-gutters>
+                        <v-col cols="auto">
+                            <v-btn icon="mdi-dock-left" @click="sidebarStatus = !sidebarStatus" variant="text"/>
+                        </v-col>
+                        <v-col>
+                            <v-card-title class="ml-1 pl-1"><strong>{{ barTitle }}</strong></v-card-title>
+                        </v-col>
+                    </v-row>
+                    <v-divider v-if="barTitle !== ''" />
+                    <div v-if="!loading.content" :style="`overflow: scroll; height: ${barTitle !== '' ? 'calc(100vh - 64px - 49px)' : 'calc(100vh - 64px);'};`">
+                        <slot />
+                    </div>
                     <v-skeleton-loader v-else color="white" :elevation="0"
                         class="border mx-auto pa-0 fill-height fill-width" type="image, article, image, table"
-                        style="display: block;"></v-skeleton-loader>
+                        style="display: block;" />
                 </v-col>
             </v-row>
         </v-container>

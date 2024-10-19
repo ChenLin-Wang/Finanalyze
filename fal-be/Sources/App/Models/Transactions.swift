@@ -5,7 +5,7 @@ import SQLKit
 final class Transaction: DModel, @unchecked Sendable {
     static let schema = TableNames.transactions
 
-    enum Category: String, Codable {
+    enum Category: String, Codable, CaseIterable {
         case food = "Food"
         case clothing = "Clothing"
         case shelter = "Shelter"
@@ -66,6 +66,11 @@ final class Transaction: DModel, @unchecked Sendable {
         var id: Transaction.IDValue; var itemName: String; var itemAmount: Int; 
         var pricePerUnit: Float; var location: String; var brand: String?; 
         var category: Category; var transactionDate: Date
+    }
+
+    struct ALLTRANSRES: Content, Sendable {
+        let user: UserInfo.FEW
+        let transaction: Transaction.DTO
     }
 
     @Sendable func dto(req: Request) async throws -> DTO { 
@@ -153,6 +158,8 @@ extension Transaction {
         case itemTotalPrice = "item_total_price"
         case category = "category"
         case date = "date"
+        case user = "username"
+        case email = "email"
     }
 
     enum CompareRelas: String, Codable {
@@ -212,6 +219,8 @@ extension QueryBuilder where Model == Transaction {
                 case .itemTotalPrice: cdb = cdb.filter(\.$totalPrice, method, try guardVal{ Float(items[2]) })
                 case .category: cdb = cdb.filter(\.$category, method, try guardVal{ Transaction.Category(rawValue: items[2])?.rawValue })
                 case .date: cdb = cdb.filter(\.$transactionDate, method, try guardVal{ ShortDateFormatter().date(from: items[2]) })
+                case .user: cdb = cdb.filter(UserInfo.self, \.$username, method, items[2])
+                case .email: cdb = cdb.filter(User.self, \.$email, method, items[2])
             }
         }
 
@@ -234,6 +243,8 @@ extension QueryBuilder where Model == Transaction {
             case .itemTotalPrice: return self.sort(\.$totalPrice, des ? .descending : .ascending)
             case .category: return self.sort(\.$category, des ? .descending : .ascending)
             case .date: return self.sort(\.$transactionDate, des ? .descending : .ascending)
+            case .user: return self.sort(UserInfo.self, \.$username, des ? .descending : .ascending)
+            case .email: return self.sort(User.self, \.$email, des ? .descending : .ascending)
         }
     }
 }

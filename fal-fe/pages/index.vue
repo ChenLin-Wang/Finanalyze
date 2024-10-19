@@ -1,7 +1,4 @@
 <script setup>
-import { Fonts } from '../shared/fonts'
-const setCSSVariables = () => document.documentElement.style.setProperty('--brand-title', Fonts.BrandTitle)
-onMounted(setCSSVariables)
 definePageMeta({ layout: 'whole' })
 </script>
 
@@ -18,12 +15,12 @@ definePageMeta({ layout: 'whole' })
 
 <style lang="css" scoped>
 .web-title {
-    font-family: var(--brand-title);
+    font-family: var(--Protest-Guerrilla);
     font-size: 100px;
     font-weight: 400;
 }
 .description-text {
-    font-family: var(--brand-title);
+    font-family: var(--Protest-Guerrilla);
     font-size: 20px;
     font-weight: 400;
 }

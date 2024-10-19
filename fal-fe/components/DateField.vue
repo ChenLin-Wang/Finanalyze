@@ -7,9 +7,10 @@
         :density="density"
         :rules="rs"
         :rounded="rounded"
-        @click="menu = true"
+        @click="menu = !readonly"
     >
         <v-menu
+            v-if="!readonly"
             activator="#dateField"
             v-model="menu"
             location="bottom"
@@ -31,12 +32,14 @@ const props = withDefaults(defineProps<{
     min?: Date,
     max?: Date,
     variant?: "filled" | "underlined" | "outlined" | "plain" | "solo" | "solo-inverted" | "solo-filled",
-    rules?: ((v: Date) => true | string)[]
+    rules?: ((v: Date) => true | string)[],
+    readonly?: boolean,
 }>(), {
     rounded: false,
     density: 'default',
     label: "",
-    variant: "underlined",
+    variant: "filled",
+    readonly: false
 })
 // @ts-ignore
 const rs = ref<ValidationRule$1[]>([

@@ -4,14 +4,11 @@
 
 <script setup>
 import { Paths } from '~/shared/paths';
-import { Fonts } from '../shared/fonts'
-const setCSSVariables = () => document.documentElement.style.setProperty('--brand-title', Fonts.BrandTitle)
-onMounted(setCSSVariables)
 </script>
 
 <style lang="css" scoped>
 .bar-title {
-    font-family: var(--brand-title);
+    font-family: var(--Protest-Guerrilla);
     font-size: 30px;
     font-weight: 400;
     cursor: pointer; /* 改变鼠标指针 */
