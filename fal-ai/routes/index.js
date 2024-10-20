@@ -1,4 +1,4 @@
-const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require("@google/generative-ai")
+const { GoogleGenerativeAI } = require("@google/generative-ai")
 const genAI = new GoogleGenerativeAI("AIzaSyByNdiC3Szp9c_wFL1w_PkpIsOJkOF0FvE")
 const model = genAI.getGenerativeModel({
     model: "gemini-1.5-pro",

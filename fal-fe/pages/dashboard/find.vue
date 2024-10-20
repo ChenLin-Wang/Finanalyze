@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TransactionValue } from '~/components/Dashboard/TransactionForm.vue';
+import { toFormValue, type TransactionValue } from '~/components/Dashboard/TransactionConvertor';
 import type { AlertDatas, LoadingStatus } from '~/layouts/default.vue';
 import { be, BearerFetch, type AllTransRes, type ResError, type TransactionRes } from '~/shared/backend';
 import { delay, localClear } from '~/shared/funcs';
@@ -20,19 +20,6 @@ const pageCount = () => Math.ceil(totalCount.value / numPerPage.value)
 
 const sort = ref("Email")
 const descending = ref(true)
-
-function toFormValue(value: TransactionRes): TransactionValue {
-    return {
-        id: value.id,
-        itemName: value.itemName,
-        itemAmount: +value.itemAmount,
-        pricePerUnit: +value.pricePerUnit,
-        location: value.location,
-        brand: value.brand,
-        category: value.category,
-        __transactionDate: value.transactionDate.split('T')[0]
-    }
-}
 
 onBeforeMount(async () => await loadTransactions())
 
@@ -96,7 +83,7 @@ const loadTransactions = async () => {
 
 <template>
     <v-container fluid class="d-flex flex-column pa-0" style="height: 100%">
-        <div class="mt-0 pt-1 flex-grow-1 pa-3" style="overflow: scroll;">
+        <div class="mt-0 pt-3 flex-grow-1 pa-3" style="overflow: scroll;">
             <DashboardFilter :with-users="true" @search="loadTransactions()" @resort="loadTransactions()"
                 v-model:filter="filters" v-model:search="keyword" v-model:sort="sort" v-model:descending="descending" />
             <DashboardTransactionList v-if="!loading"

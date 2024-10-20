@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 var indexRouter = require('./routes/index');
+var visionRouter = require('./routes/visionAi');
 var testRouter = require('./routes/test');
 
 const geminiPromptPath = path.join(__dirname, 'gemini_prompts.txt');
@@ -33,9 +34,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/chat', (req, res, next) => { req.geminiPrompt = geminiPrompt; req.quesPrompt = quesPrompt; indexRouter(req, res, next) });
-app.use('/test', testRouter);
-app.use(express.static('public'))
-// app.use('/users', usersRouter);
+app.use('/vision', visionRouter);
+// app.use('/test', testRouter);
+// app.use(express.static('public'))
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

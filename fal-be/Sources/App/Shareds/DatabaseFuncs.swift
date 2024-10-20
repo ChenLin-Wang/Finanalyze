@@ -46,7 +46,6 @@ protocol DModel: Model, AsyncResponseEncodable, Sendable {
     associatedtype MIG: DMigration
     static var T: [FieldType] {get}
     @Sendable func dto(req: Request) async throws -> DTO
-    // @Sendable func dtos(from models: [Self], req: Request) async throws -> [DTO]
 }
 
 extension DModel {
@@ -58,13 +57,15 @@ extension DModel {
 
 protocol DMigration: Migration, Sendable {
     associatedtype MOD: DModel
+    func migrationFinished(on database: Database)
 }
 
 extension DMigration {
     func prepare(on database: Database) -> EventLoopFuture<Void> {
-        TableCreate(MOD.schema, database: database, types: MOD.T)
+        TableCreate(MOD.schema, database: database, types: MOD.T).map { migrationFinished(on: database) }
     }
 
+    func migrationFinished(on database: Database) {}
     func revert(on database: Database) -> EventLoopFuture<Void> {
         database.schema(MOD.schema).delete()
     }

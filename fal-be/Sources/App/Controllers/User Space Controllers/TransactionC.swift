@@ -69,9 +69,9 @@ struct TransactionC: RouteCollection {
     }
 
     @Sendable func newTransaction(req: Request) async throws -> Transaction {
-        try req.auth.require(User.self)
+        let user = try req.auth.require(User.self)
         let transactionDatas = try req.content.decode(Transaction.NEW.self)
-        let transaction = try Transaction(data: transactionDatas)
+        let transaction = try Transaction(consumerId: user.requireID(), data: transactionDatas)
         try await transaction.save(on: req.db)
         return transaction
     }

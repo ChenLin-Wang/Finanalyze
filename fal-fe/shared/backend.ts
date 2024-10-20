@@ -24,7 +24,7 @@ const backend_defaults = {
                 timeline: "/userspace/overview/timeline",
                 category: "/userspace/overview/category",
                 item: "/userspace/overview/item"
-            }
+            },
         }
     }
 }
@@ -69,6 +69,7 @@ export type TransactionRes = {
     brand?: string
     category: string
     transactionDate: string
+    imgPath?: FileUploadRes
 }
 
 export type AiAnsRes = {
@@ -105,6 +106,21 @@ export type CategoryRes = {
     countWeight: number
 }
 
+export type Detect = {
+    description: string
+    score: number
+    confidence: number
+}
+
+export type FileUploadRes = {
+    id: string
+    name: string
+    path: string
+    type: string
+    createdAt: string
+    detect: Detect[]
+}
+
 export type ResError = {
     url: string,
     statusCode: number,
@@ -121,7 +137,6 @@ export const BearerFetch = async (url: string, options: any = {}) => {
     // const config = useRuntimeConfig();
     options.headers = {
         ...options.headers,
-        "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem(be.tokenKey) || ''}`,
     };
     return $fetch(url, options);

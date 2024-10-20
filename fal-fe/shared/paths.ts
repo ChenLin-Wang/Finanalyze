@@ -2,7 +2,9 @@ export const Paths = {
     home: "/",
     login: "/login",
     register: "/register",
-    dashboard: "/dashboard"
+    dashboard: "/dashboard",
+    transactions: "/dashboard/transactions",
+    newTransaction: "/dashboard/transactions/new"
 }
 
 export const globalKeys = {

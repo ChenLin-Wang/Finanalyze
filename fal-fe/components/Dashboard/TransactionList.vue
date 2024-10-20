@@ -1,9 +1,9 @@
 <script setup lang="ts">
 
 import { CategoryIcons } from '~/shared/parameters';
-import type { TransactionValue } from './TransactionForm.vue';
 import { deepCopy, numberArray } from '~/shared/funcs';
 import { DateToShortStr } from '~/shared/dateFunctions';
+import type { TransactionValue } from './TransactionConvertor';
 
 const props = withDefaults(defineProps<{
     transactions: TransactionValue[]

@@ -19,10 +19,6 @@ const newC = ref(true)
 const chat = ref({ id: "", title: "", contents: [], createdAt: "", updatedAt: "" } as AiAnsRes)
 const chatListStatus = ref(false)
 
-const emit = defineEmits<{
-    (e: "sidebarToggle"): void
-}>()
-
 onBeforeMount(async () => {
     chatSideBarLoading.value = true
     try {

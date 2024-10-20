@@ -67,7 +67,7 @@ const removeField = (i: number) => {
 
 <template>
     <v-row no-gutters align="center" justify="center">
-        <v-col>
+        <v-col class="pr-2">
             <v-text-field v-on:keyup.enter="emit('search')" density="comfortable" v-model="search" label="Search" prepend-inner-icon="mdi-magnify" variant="outlined" hide-details/>
         </v-col>
         <v-col cols="auto" style="width: 140px;">

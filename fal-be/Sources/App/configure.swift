@@ -38,12 +38,12 @@ public func configure(_ app: Application) async throws {
     // app.sessions.use(.fluent)
 
     app.migrations.add(User.MIG())
+    app.migrations.add(FileUpload.MIG())
     app.migrations.add(PswReset.MIG())
     app.migrations.add(Token.MIG())
     app.migrations.add(UserInfo.MIG())
-    app.migrations.add(Transaction.MIG())
-    app.migrations.add(FileUpload.MIG())
     app.migrations.add(AiChat.MIG())
+    app.migrations.add(Transaction.MIG())
     
     // app.logger.logLevel = .debug
     try await app.autoMigrate()
