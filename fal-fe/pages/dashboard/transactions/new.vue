@@ -68,7 +68,6 @@ const detailApplied = (detail: Detail) => {
 
 const photoDone = () => {
     step.value = 0
-    console.log(transaction.value)
 }
 
 const submit = async (transaction: TransactionValue, i: number) => {

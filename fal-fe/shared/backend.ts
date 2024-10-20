@@ -134,10 +134,9 @@ export type ResError = {
 }
 
 export const BearerFetch = async (url: string, options: any = {}) => {
-    // const config = useRuntimeConfig();
     options.headers = {
         ...options.headers,
         Authorization: `Bearer ${localStorage.getItem(be.tokenKey) || ''}`,
     };
-    return $fetch(url, options);
+    return await $fetch(url, options);
 }

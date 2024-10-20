@@ -44,7 +44,6 @@ const chatSelected = async (id: string) => {
     chatLoading.value = true
     try {
         const res = await BearerFetch(be.head + be.api.userspace.ai.chat + "?id=" + id) as AiAnsRes
-        console.log(res)
         chat.value = res
         chatLoading.value = false
     } catch (err) {

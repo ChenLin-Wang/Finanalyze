@@ -46,7 +46,6 @@ const fieldChange = (value: string, i: number) => {
     if (!filter.value) return
     filter.value[i][1] = fields[value as keyof typeof fields][0][0]
     const t = fields[value as keyof typeof fields][2]
-    console.log(t)
     filter.value[i][2] = t === "string" ? "" : 
                             t === "number" ? "0" : 
                             t === "selector" ? fields[value as keyof typeof fields][3][0] :

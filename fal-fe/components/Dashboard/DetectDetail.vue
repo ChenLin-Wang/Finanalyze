@@ -24,7 +24,6 @@ const emit = defineEmits<{
 
 const detailApplied = async () => {
     if (form.value == undefined) return;
-    console.log(detail.value)
     const { valid } = await form.value?.validate()
     if (valid) emit("detailApplied", detail.value)
 }

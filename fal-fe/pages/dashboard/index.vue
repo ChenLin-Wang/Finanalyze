@@ -38,7 +38,6 @@ const load = async () => {
         const queryStr = 
             `?zone=${zones[viewOption.value.by]}` + 
             (viewOption.value.duration && viewOption.value.startDate ? `&range=${viewOption.value.duration}&start=${dateFormat(viewOption.value.startDate, "YYYY-MM-DD")}` : "")
-        console.log(queryStr)
         summaryData.value = await BearerFetch(be.head + be.api.userspace.overview.summary) as SummaryRes
         timeLineDatas.value = await BearerFetch(be.head + be.api.userspace.overview.timeline + queryStr) as TimelineRes[]
         categoryDatas.value = await BearerFetch(be.head + be.api.userspace.overview.category + queryStr) as CategoryRes[]

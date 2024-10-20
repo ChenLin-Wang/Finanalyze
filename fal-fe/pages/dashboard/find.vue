@@ -56,7 +56,6 @@ const loadTransactions = async () => {
     const filterStr = f.join(";")
     try {
         totalCount.value = await BearerFetch(be.head + be.api.userspace.transactions.all + "/count?filter=" + filterStr) as number
-        console.log(totalCount.value)
         checkCurPageIndex()
         const res = await BearerFetch(
             be.head +
@@ -72,7 +71,6 @@ const loadTransactions = async () => {
             s.user = r.user
             return s
         })
-        console.log(allTrans)
         transactions.value = allTrans
     } catch (err) {
         errHandle(err as ResError)
