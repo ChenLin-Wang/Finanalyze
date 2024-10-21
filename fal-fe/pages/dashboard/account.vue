@@ -98,8 +98,8 @@ const errHandle = (error: ResError) => {
 </script>
 
 <template>
-    <h4 class="py-0 mt-0 ma-3 mt-4 mb-2">Avatar</h4>
+    <h4 class="py-0 ma-4 mb-3">Avatar</h4>
     <DashboardPhoto @useImage="getImage" :rounded="true" @clear="cancelAvatar"/>
-    <DashboardInfoForm v-if="!imgLoading" @submit="submit" :infos="toFormValue(infos)" :always-enable-submit="photoPath !== null"/>
+    <DashboardInfoForm class="pt-0 mt-0" v-if="!imgLoading" @submit="submit" :infos="toFormValue(infos)" :always-enable-submit="photoPath !== null"/>
     <v-skeleton-loader v-else color="white" :elevation="0" class="ma-0 border pa-0 fill-width fill-height" type="card, table"/>
 </template>

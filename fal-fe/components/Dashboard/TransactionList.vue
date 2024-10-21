@@ -4,6 +4,7 @@ import { CategoryIcons } from '~/shared/parameters';
 import { deepCopy, numberArray } from '~/shared/funcs';
 import { DateToShortStr } from '~/shared/dateFunctions';
 import type { TransactionValue } from './TransactionConvertor';
+import { useDisplay } from 'vuetify';
 
 const props = withDefaults(defineProps<{
     transactions: TransactionValue[]
@@ -38,6 +39,11 @@ const showAndHide = (i: number) => {
 
 defineExpose({ closeAllDetails })
 
+const isSmallScreen = () => {
+    if (process.server) return false
+    return useDisplay().width.value < 600
+}
+
 </script>
 
 <template>
@@ -50,15 +56,15 @@ defineExpose({ closeAllDetails })
                         :subtitle="`${transaction.__transactionDate}  ${transaction.category}`"
                         :title="transaction.brand ? `${transaction.itemName} (${transaction.brand})` : transaction.itemName">
                         <template v-slot:prepend>
-                            <v-avatar :color="CategoryIcons[transaction.category as keyof typeof CategoryIcons].color">
+                            <v-avatar class="flex-shrink-0" :color="CategoryIcons[transaction.category as keyof typeof CategoryIcons].color">
                                 <v-icon>{{ CategoryIcons[transaction.category as keyof typeof CategoryIcons].icon }}</v-icon>
                             </v-avatar>
                         </template>
                         <template v-slot:append>
-                            <h4>{{ `${transaction.itemAmount} &times;&#8369;${transaction.pricePerUnit} = ` }}</h4>
+                            <h4 v-if="!isSmallScreen()">{{ `${transaction.itemAmount} &times;&#8369;${transaction.pricePerUnit} =&nbsp;` }}</h4>
                             <h4 class="text-red">{{ `&#8369;${Math.round(transaction.itemAmount * transaction.pricePerUnit * 100) / 100}` }}</h4>
                             <v-divider v-if="!deletable" vertical class="mx-3"/>
-                            <div v-if="!deletable" class="text-end mr-3">
+                            <div v-if="!deletable && !isSmallScreen()" class="text-end mr-3">
                                 <v-row no-gutters class="pa-0 ma-0">
                                     <v-col class="pa-0 ma-0">
                                         <h5>{{ transaction.user?.username }}</h5>

@@ -5,6 +5,7 @@ import { be, BearerFetch, type CategoryRes, type ResError, type SummaryRes, type
 import { dateFormat } from '~/shared/dateFunctions';
 import { delay, localClear } from '~/shared/funcs';
 import { globalKeys, Paths } from '~/shared/paths';
+import { useDisplay } from 'vuetify';
 
 const barTitle = ref(inject(globalKeys.dashboardBarTitle) as string)
 const alertDatas = ref(inject(globalKeys.dashboardAlertKey) as AlertDatas)
@@ -55,9 +56,9 @@ const errHandle = async (e: ResError) => {
     e.data.reason += ", Jumping to Home after 3 seconds..."
     alertDatas.value.info = e
     alertDatas.value.show = true
-    // await delay(3000)
-    // localClear()
-    // useRouter().push(Paths.home)
+    await delay(3000)
+    localClear()
+    useRouter().push(Paths.home)
     loading.value = false
 }
 
@@ -113,38 +114,42 @@ const counterColors = {
     "Books and Media": "#FBC02D"   // Yellow
 }
 
+const isSmallScreen = () => useDisplay().width.value < 900
+
 </script>
 
 <template>
-    <v-row v-if="!loading" no-gutters style="height: calc(100% - 65px)">
-        <v-col class="pa-2" cols="6" style="height: 50%;">
-            <v-card class="fill-height">
-                <DashboardSummaryDeck :summary="summaryData" style="min-height: 100%; max-height: 100%;" />
-            </v-card>
-        </v-col>
-        <v-col class="pa-2" cols="6" style="height: 50%;">
-            <v-card class="fill-height">
-                <DashboardTimeLinePlot v-if="timeLineDatas.length > 0" :datas="timeLineDatas" style="min-height: 100%; max-height: 100%;" />
-                <DashboardNull v-else label="Transactions" />
-            </v-card>
-        </v-col>
-        <v-col class="pa-2" cols="8" style="height: 50%;">
-            <v-card class="fill-height">
-                <DashboardCategoryPlot v-if="categoryDatas.length > 0" :coster-colors="curCosterColors" :counter-colors="curCounterColors"
-                    :datas="categoryDatas" style="min-height: 100%; max-height: 100%;" />
-                <DashboardNull v-else label="Transactions" />
-            </v-card>
-        </v-col>
-        <v-col class="pa-2" cols="4" style="height: 50%;">
-            <v-card class="fill-height">
-                <DashboardPiePlot v-if="categoryDatas.length > 0" :total-cost="categoryDatas.map(a => a.costWeight).reduce((a, c) => a + c, 0)"
-                    :total-count="categoryDatas.map(a => a.countWeight).reduce((a, c) => a + c, 0)"
-                    :coster-colors="curCosterColors" :counter-colors="curCounterColors" :datas="categoryDatas"
-                    style="min-height: 100%; max-height: 100%;" />
-                <DashboardNull v-else label="Transactions" />
-            </v-card>
-        </v-col>
-    </v-row>
+    <clientOnly v-if="!loading">
+        <v-row no-gutters :style="'height: calc(100% - 65px); ' + (isSmallScreen() ? 'overflow: scroll; ' : '')">
+            <v-col class="pa-2" :cols="isSmallScreen() ? '12' : '6'" :style="isSmallScreen() ? 'min-height: 300px' : 'height: 50%;'">
+                <v-card class="fill-height">
+                    <DashboardSummaryDeck :summary="summaryData" style="min-height: 100%; max-height: 100%;" />
+                </v-card>
+            </v-col>
+            <v-col class="pa-2" :cols="isSmallScreen() ? '12' : '6'" :style="isSmallScreen() ? 'min-height: 400px' : 'height: 50%;'">
+                <v-card class="fill-height">
+                    <DashboardTimeLinePlot v-if="timeLineDatas.length > 0" :datas="timeLineDatas" style="min-height: 100%; max-height: 100%;" />
+                    <DashboardNull v-else label="Transactions" />
+                </v-card>
+            </v-col>
+            <v-col class="pa-2" :cols="isSmallScreen() ? '12' : '6'" :style="isSmallScreen() ? 'min-height: 400px' : 'height: 50%;'">
+                <v-card class="fill-height">
+                    <DashboardCategoryPlot v-if="categoryDatas.length > 0" :coster-colors="curCosterColors" :counter-colors="curCounterColors"
+                        :datas="categoryDatas" style="min-height: 100%; max-height: 100%;" />
+                    <DashboardNull v-else label="Transactions" />
+                </v-card>
+            </v-col>
+            <v-col class="pa-2" :cols="isSmallScreen() ? '12' : '6'" :style="isSmallScreen() ? 'min-height: 400px' : 'height: 50%;'">
+                <v-card class="fill-height">
+                    <DashboardPiePlot v-if="categoryDatas.length > 0" :total-cost="categoryDatas.map(a => a.costWeight).reduce((a, c) => a + c, 0)"
+                        :total-count="categoryDatas.map(a => a.countWeight).reduce((a, c) => a + c, 0)"
+                        :coster-colors="curCosterColors" :counter-colors="curCounterColors" :datas="categoryDatas"
+                        style="min-height: 100%; max-height: 100%;" />
+                    <DashboardNull v-else label="Transactions" />
+                </v-card>
+            </v-col>
+        </v-row>
+    </clientOnly>
     <v-skeleton-loader v-else color="white" style="height: calc(100% - 65px)" :elevation="0"
         class="border mx-auto pa-0 fill-width" type="card, card" />
     <v-divider />

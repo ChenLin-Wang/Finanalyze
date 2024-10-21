@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { VNodeRef } from 'vue';
-
+import { useDisplay } from 'vuetify';
 
 const file = ref<File | null>(null)
 const imageUrl = ref<string | null>(null)
@@ -80,12 +80,17 @@ const cancelImg = () => {
 
 onUnmounted(() => { closePopover() })
 
+const isSmallScreen = () => {
+    if (process.server) return false
+    return useDisplay().width.value < 550
+}
+
 </script>
 
 <template>
     <v-container class="py-0 pb-3" fluid>
         <v-row no-gutters align="center" justify="center">
-            <v-col cols="8">
+            <v-col class="pa-2" :cols="isSmallScreen() ? '12' : '8'">
                 <v-file-input
                     v-model="file" 
                     label="Upload an Image" 
@@ -98,13 +103,13 @@ onUnmounted(() => { closePopover() })
                     hide-details
                     @update:model-value="onFileChange" />
             </v-col>
-            <v-col class="text-center" cols="1">
+            <v-col class="text-center pa-0 ma-0" cols="1">
                 <p>Or</p>
             </v-col>
-            <v-col cols="3">
+            <v-col class="pa-2" :cols="isSmallScreen() ? '' : '3'">
                 <v-btn :rounded="rounded" @click="openPopover" style="width: 100%; height: 56px; overflow: hidden">Take Picture</v-btn>
             </v-col>
-            <v-col class="mt-3" v-if="imageUrl" cols="12" align="center" justify="center">
+            <v-col class="pa-2" v-if="imageUrl" cols="12" align="center" justify="center">
                 <v-card class="pa-3" style="position: relative; border-radius: 20px;" elevation="4">
                     <v-btn icon="mdi-close-circle-outline" @click="cancelImg" variant="text" style="
                         position: absolute;
@@ -115,7 +120,7 @@ onUnmounted(() => { closePopover() })
                     <v-img :src="imageUrl" max-height="300" />
                 </v-card>
             </v-col>
-            <v-col class="mt-3" v-if="imageUrl" cols="12">
+            <v-col class="pa-2" v-if="imageUrl" cols="12">
                 <!-- @vue-ignore -->
                 <v-btn rounded @click="emit('useImage', file)" style="width:100%">Use Image</v-btn>
             </v-col>

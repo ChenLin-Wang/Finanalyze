@@ -108,7 +108,7 @@ const errHandle = async (e: ResError) => {
 </script>
 
 <template>
-    <v-row no-gutters>
+    <v-row no-gutters style="flex-wrap: nowrap;">
         <v-col cols="auto">
             <v-btn @click="sidebarStatus = !sidebarStatus" icon="mdi-dock-left" variant="text" />
         </v-col>
