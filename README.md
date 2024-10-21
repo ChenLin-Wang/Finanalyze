@@ -4,7 +4,7 @@
 
 This project is part of the course **CpE 314 - Software Designing**, where the goal is to build a modern, functional system combining state-of-the-art technologies such as AI and web development frameworks.
 
-[See our website here](http://finanalyze.inspiral.site:3000)
+[See our website here](https://finanalyze.inspiral.site)
 
 ## Features
 
