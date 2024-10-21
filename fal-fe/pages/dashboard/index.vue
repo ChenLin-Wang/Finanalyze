@@ -128,14 +128,14 @@ const isSmallScreen = () => useDisplay().width.value < 900
                     <DashboardNull v-else label="Transactions" />
                 </v-card>
             </v-col>
-            <v-col class="pa-2" :cols="isSmallScreen() ? '12' : '6'" :style="isSmallScreen() ? 'min-height: 400px' : 'height: 50%;'">
+            <v-col class="pa-2" :cols="isSmallScreen() ? '12' : '8'" :style="isSmallScreen() ? 'min-height: 400px' : 'height: 50%;'">
                 <v-card class="fill-height">
                     <DashboardCategoryPlot v-if="categoryDatas.length > 0" :coster-colors="curCosterColors" :counter-colors="curCounterColors"
                         :datas="categoryDatas" style="min-height: 100%; max-height: 100%;" />
                     <DashboardNull v-else label="Transactions" />
                 </v-card>
             </v-col>
-            <v-col class="pa-2" :cols="isSmallScreen() ? '12' : '6'" :style="isSmallScreen() ? 'min-height: 400px' : 'height: 50%;'">
+            <v-col class="pa-2" :cols="isSmallScreen() ? '12' : '4'" :style="isSmallScreen() ? 'min-height: 400px' : 'height: 50%;'">
                 <v-card class="fill-height">
                     <DashboardPiePlot v-if="categoryDatas.length > 0" :total-cost="categoryDatas.map(a => a.costWeight).reduce((a, c) => a + c, 0)"
                         :total-count="categoryDatas.map(a => a.countWeight).reduce((a, c) => a + c, 0)"
