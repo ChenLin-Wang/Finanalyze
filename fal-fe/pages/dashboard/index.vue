@@ -124,21 +124,24 @@ const counterColors = {
         </v-col>
         <v-col class="pa-2" cols="6" style="height: 50%;">
             <v-card class="fill-height">
-                <DashboardTimeLinePlot :datas="timeLineDatas" style="min-height: 100%; max-height: 100%;" />
+                <DashboardTimeLinePlot v-if="timeLineDatas.length > 0" :datas="timeLineDatas" style="min-height: 100%; max-height: 100%;" />
+                <DashboardNull v-else label="Transactions" />
             </v-card>
         </v-col>
         <v-col class="pa-2" cols="8" style="height: 50%;">
             <v-card class="fill-height">
-                <DashboardCategoryPlot :coster-colors="curCosterColors" :counter-colors="curCounterColors"
+                <DashboardCategoryPlot v-if="categoryDatas.length > 0" :coster-colors="curCosterColors" :counter-colors="curCounterColors"
                     :datas="categoryDatas" style="min-height: 100%; max-height: 100%;" />
+                <DashboardNull v-else label="Transactions" />
             </v-card>
         </v-col>
         <v-col class="pa-2" cols="4" style="height: 50%;">
             <v-card class="fill-height">
-                <DashboardPiePlot :total-cost="categoryDatas.map(a => a.costWeight).reduce((a, c) => a + c, 0)"
+                <DashboardPiePlot v-if="categoryDatas.length > 0" :total-cost="categoryDatas.map(a => a.costWeight).reduce((a, c) => a + c, 0)"
                     :total-count="categoryDatas.map(a => a.countWeight).reduce((a, c) => a + c, 0)"
                     :coster-colors="curCosterColors" :counter-colors="curCounterColors" :datas="categoryDatas"
                     style="min-height: 100%; max-height: 100%;" />
+                <DashboardNull v-else label="Transactions" />
             </v-card>
         </v-col>
     </v-row>

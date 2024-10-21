@@ -24,19 +24,19 @@ const changed = () => { emit("viewOptionChanged") }
 <template>
     <v-row no-gutters>
         <v-col cols="3" class="px-3">
-            <v-select v-model="viewOption.by" variant="solo" density="compact" :items="Object.keys(selectors)" label="View By" hide-details/>
+            <v-select rounded v-model="viewOption.by" variant="solo" density="compact" :items="Object.keys(selectors)" label="View By" hide-details/>
         </v-col>
         <v-divider vertical />
         <v-col cols="3" class="px-3">
-            <DateField v-model:dateStr="viewOption.startDate" variant="solo" density="compact" :label="selectors[viewOption.by][0] as string" hide-details/>
+            <DateField rounded v-model:dateStr="viewOption.startDate" variant="solo" density="compact" :label="selectors[viewOption.by][0] as string" hide-details/>
         </v-col>
         <v-divider vertical />
         <v-col cols="3" class="px-3">
-            <v-text-field v-model="viewOption.duration" variant="solo" density="compact" label="duration" type="number" hide-details/>
+            <v-text-field rounded v-model="viewOption.duration" variant="solo" density="compact" label="duration" type="number" hide-details/>
         </v-col>
         <v-divider vertical />
         <v-col cols="3" class="px-3">
-            <v-btn rounded variant="elevated" @click="changed">Refresh</v-btn>
+            <v-btn rounded variant="elevated" @click="changed" style="height: 40px">Refresh</v-btn>
         </v-col>
     </v-row>
 </template>

@@ -367,3 +367,5 @@ Config/secrets
 **/xcshareddata/WorkspaceSettings.xcsettings
 
 # End of https://www.toptal.com/developers/gitignore/api/vapor,swift,swiftpackagemanager,xcode
+
+fal-be/Public/uploads/*

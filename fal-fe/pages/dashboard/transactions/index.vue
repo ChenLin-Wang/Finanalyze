@@ -119,11 +119,12 @@ const loadTransactions = async () => {
         <div class="mt-0 pt-3 flex-grow-1 pa-3" style="overflow: scroll;">
             <DashboardFilter :with-users="false" @search="loadTransactions()" @resort="loadTransactions()"
                 v-model:filter="filters" v-model:search="keyword" v-model:sort="sort" v-model:descending="descending" />
-            <DashboardTransactionList v-if="!loading"
+            <DashboardTransactionList v-if="!loading && transactions.length > 0"
                 ref="transactionList" :numPerPage="numPerPage" :transactions="transactions.map(a => toFormValue(a))"
                 @submit="submit" @delete="del" deletable />
-            <v-skeleton-loader v-else color="white" :elevation="0" class="border mx-auto pa-0 fill-width" type="table"
-            style="display: block; height: 446px" />
+            <DashboardNull v-if="!loading && transactions.length == 0" label="Transactions" />
+            <v-skeleton-loader v-if="loading" color="white" :elevation="0" class="border mx-auto pa-0 fill-width" type="table"
+                style="display: block; height: 446px" />
         </div>
         <v-divider />
         <v-row class="text-center flex-shrink-0 flex-grow-0 px-3" style="height:64px" no-gutters align="center"

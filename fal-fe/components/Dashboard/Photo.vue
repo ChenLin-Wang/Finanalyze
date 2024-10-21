@@ -123,6 +123,7 @@ onUnmounted(() => { closePopover() })
                 v-model="popover"
                 fullscreen
                 hide-overlay
+                @after-leave="closePopover"
                 transition="dialog-bottom-transition">
                 <v-card class="fill-height fill-width d-flex flex-column">
                     <video class="flex-grow-1 py-auto" ref="video" autoplay playsinline style="max-height: calc(100% - 50px);" />

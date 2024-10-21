@@ -17,7 +17,7 @@ const chatWaiting = ref(false)
 const chatView = ref(null)
 const newC = ref(true)
 const chat = ref({ id: "", title: "", contents: [], createdAt: "", updatedAt: "" } as AiAnsRes)
-const chatListStatus = ref(false)
+const chatListStatus = ref(true)
 
 onBeforeMount(async () => {
     chatSideBarLoading.value = true
@@ -86,12 +86,14 @@ const send = async (text: string) => {
 }
 
 const del = async (id: string) => {
+    chatSideBarLoading.value = true
     try {
-        const res = await BearerFetch(be.head + be.api.userspace.ai.chat, {
+        const _ = await BearerFetch(be.head + be.api.userspace.ai.chat, {
             method: "DELETE",
             body: { id: id }
         }) as string
         chats.value = chats.value.filter(a => a.id !== id);
+        chatSideBarLoading.value = false
         if (chat.value.id === id) newC.value = true
     } catch (err) {
         errHandle(err as ResError)
@@ -101,12 +103,15 @@ const del = async (id: string) => {
 </script>
 
 <template>
-    <v-row no-gutters>
+    <v-row no-gutters align="center" justify="center">
         <v-col cols="auto">
             <v-btn @click="sidebarStatus = !sidebarStatus" icon="mdi-dock-left" variant="text" />
         </v-col>
-        <v-col>
+        <v-col cols="auto">
             <v-card-title class="ml-1 pl-1"><strong>Ai Bot</strong></v-card-title>
+        </v-col>
+        <v-col>
+            <p>Powered by Google Gemini 1.5</p>
         </v-col>
         <v-col cols="auto">
             <v-btn icon="mdi-dock-right" @click="chatListStatus = !chatListStatus" variant="text" />
@@ -120,7 +125,7 @@ const del = async (id: string) => {
         </v-col>
         <v-divider v-if="chatListStatus" vertical />
         <v-col v-if="chatListStatus" cols="auto" style="width: 250px">
-            <DashboardAiChatList :chats="chats" :loading="false" @chat-selected="chatSelected" @new-chat="newC = true"
+            <DashboardAiChatList :chats="chats" :loading="chatSideBarLoading" @chat-selected="chatSelected" @new-chat="newC = true"
                 @delete="del" />
         </v-col>
     </v-row>

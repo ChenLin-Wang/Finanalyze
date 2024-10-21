@@ -4,6 +4,7 @@ import type { TransactionValue } from '~/components/Dashboard/TransactionConvert
 import type { AlertDatas } from '~/layouts/default.vue';
 import { be, BearerFetch, type Detect, type FileUploadRes, type ResError, type TransactionRes } from '~/shared/backend';
 import { dateFormat } from '~/shared/dateFunctions';
+import { delay, localClear } from '~/shared/funcs';
 import { globalKeys, Paths } from '~/shared/paths';
 
 const alertDatas = ref(inject(globalKeys.dashboardAlertKey) as AlertDatas)
@@ -91,8 +92,6 @@ const successHandle = () => {
     alertDatas.value.type = "success"
     alertDatas.value.info = "Operation Success!"
     alertDatas.value.show = true
-    // loading.value = false
-    // checkCurPageIndex()
 }
 
 const errHandle = async (e: ResError) => {
@@ -101,10 +100,9 @@ const errHandle = async (e: ResError) => {
     e.data.reason += ", Jumping to Home after 3 seconds..."
     alertDatas.value.info = e
     alertDatas.value.show = true
-    // await delay(3000)
-    // localClear()
-    // useRouter().push(Paths.home)
-    // loading.value = false
+    await delay(3000)
+    localClear()
+    useRouter().push(Paths.home)
 }
 
 </script>
