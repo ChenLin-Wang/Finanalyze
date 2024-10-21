@@ -34,7 +34,6 @@ onBeforeMount(async () => {
 const errHandle = async (e: ResError) => {
     alertDatas.value.title = "Something wrong!"
     alertDatas.value.type = "error"
-    e.data.reason += ", Jumping to Home after 3 seconds..."
     alertDatas.value.info = e
     alertDatas.value.show = true
     chatSideBarLoading.value = false

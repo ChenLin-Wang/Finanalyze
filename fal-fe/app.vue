@@ -2,6 +2,9 @@
 import { FontSetup } from './shared/fonts';
 
 onMounted(FontSetup)
+
+useHead({ title: 'Finanalyze' })
+
 </script>
 
 <template>

@@ -2,6 +2,7 @@
 import { be, BearerFetch, type TransactionRes, type InfoGetRes, type ResError } from '~/shared/backend';
 import { delay, localClear } from '~/shared/funcs';
 import { getUserSpaceItem, globalKeys, Paths, userSpaceItems } from '~/shared/paths';
+import { useDisplay } from 'vuetify';
 
 export type AlertDatas = {
     info: ResError | string | null,
@@ -54,6 +55,8 @@ onBeforeMount(async () => {
     }
 })
 
+const isSmallScreen = () => useDisplay().width.value < 700
+
 const router = useRouter()
 router.beforeEach(() => loading.value.content = true)
 router.afterEach(() => loading.value.content = false)
@@ -74,7 +77,7 @@ router.afterEach(() => loading.value.content = false)
         <v-container fluid class="pa-0 ma-0">
             <v-row no-gutters>
                 <v-col style="position: relative">
-                    <Alert style="position: absolute; max-width: 400px; right: 0px; top: 10px; z-index: 10;" :type="alertDatas.type" :title="alertDatas.title" :info="alertDatas.info"
+                    <Alert :style="'position: absolute; right: 0px; z-index: 10;' + (isSmallScreen() ? 'top: 0px; width: 100%;' : 'top: 10px; max-width: 400px;')" :type="alertDatas.type" :title="alertDatas.title" :info="alertDatas.info"
                         v-model:show="alertDatas.show" :timeout="3000" />
                     <v-row v-if="barTitle !== ''" no-gutters>
                         <v-col cols="auto">

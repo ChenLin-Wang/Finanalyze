@@ -52,3 +52,22 @@ export default defineNuxtConfig({
         },
     }
 })
+
+/*
+PORT=3000 forever start -c node .output/server/index.mjs
+
+# 安装forever
+npm install forever -g
+# 启动应用
+forever start app.js --watch
+# 关闭应用
+forever stop app.js
+# 重启应用
+forever restart app.js
+# 关闭所有应用
+forever stopall
+# 重启所有应用
+forever restartall
+# 显示所有运行的应用
+forever list
+*/

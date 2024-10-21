@@ -1,0 +1,1 @@
+let publicFolder = "/home/inspiral/public/finanalyze"

@@ -1,0 +1,13 @@
+#!/bin/sh
+
+SCRIPT_DIR=$(cd "$(dirname "$0")"; pwd)
+
+cd "$SCRIPT_DIR"/fal-fe; PORT=3000 forever start -c node .output/server/index.mjs
+
+cd "$SCRIPT_DIR"/fal-ai; forever start -c node ./bin/www
+
+cd "$SCRIPT_DIR"/fal-be/.build/release; pm2 delete all; pm2 start ./App
+
+echo Done.
+
+exit 0

@@ -26,7 +26,7 @@ struct FileUploadC: RouteCollection {
     @Sendable func uploadFile(req: Request, type: FileUpload.UploadType) async throws -> FileUpload {
         let user = try req.auth.require(User.self)
         let pathComp = "uploads/" + type.rawValue + "/"
-        let directory = DirectoryConfiguration.detect().workingDirectory + "Public/" + pathComp
+        let directory = publicFolder + "/" + pathComp
         let file = try req.content.decode(FileUpload.NEW.self)
         let realName = RandomTimeBasedName() + "_" + file.name 
         let path = directory + realName

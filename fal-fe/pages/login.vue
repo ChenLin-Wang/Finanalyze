@@ -3,6 +3,7 @@ import type { UserLoginData } from '~/components/Auth/Login.vue';
 import { be, type LoginPostRes, type ResError } from '~/shared/backend';
 import { delay, localClear } from '~/shared/funcs';
 import { Paths } from '~/shared/paths';
+import { useDisplay } from 'vuetify';
 
 definePageMeta({ layout: 'plain' })
 
@@ -37,11 +38,14 @@ const login = async (value: UserLoginData) => {
         loading.value = false
     }
 }
+
+const isSmallScreen = () => useDisplay().width.value < 700
+
 </script>
 
 <template>
     <v-container fluid class="ma-0 pa-0" style="position: relative">
-        <Alert style="position: absolute; max-width: 400px; right: 0px; top: 10px; z-index: 10;" :type="alertType" :title="alertTitle" :info="info" v-model:show="showAlert" :timeout="3000"/>
+        <Alert :style="'position: absolute; right: 0px; z-index: 10;' + (isSmallScreen() ? 'top: 0px; width: 100%;' : 'top: 10px; max-width: 400px;')" :type="alertType" :title="alertTitle" :info="info" v-model:show="showAlert" :timeout="3000"/>
         <v-row class="ma-0 pa-0" style="min-height: 100vh;" align="center" justify="center">
             <v-col>
                 <AuthLogin class="ma-5" :loading="loading" @login="login" />
