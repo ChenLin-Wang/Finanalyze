@@ -2,6 +2,7 @@
 import { CategoryIcons } from '~/shared/parameters';
 import { numValidate, requireValidate } from '~/shared/validations';
 import DateField from '../DateField.vue';
+import { useDisplay } from 'vuetify';
 
 const emit = defineEmits<{
     (e: "search"): void,
@@ -46,7 +47,6 @@ const fieldChange = (value: string, i: number) => {
     if (!filter.value) return
     filter.value[i][1] = fields[value as keyof typeof fields][0][0]
     const t = fields[value as keyof typeof fields][2]
-    console.log(t)
     filter.value[i][2] = t === "string" ? "" : 
                             t === "number" ? "0" : 
                             t === "selector" ? fields[value as keyof typeof fields][3][0] :
@@ -63,21 +63,26 @@ const removeField = (i: number) => {
     filter.value = filter.value.filter( (_, ind) => ind !== i )
 }
 
+const isSmallScreen = () => {
+    if (process.server) return false
+    return useDisplay().width.value < 500
+}
+
 </script>
 
 <template>
     <v-row no-gutters align="center" justify="center">
-        <v-col>
+        <v-col class="pa-2" :cols="isSmallScreen() ? '12' : ''">
             <v-text-field v-on:keyup.enter="emit('search')" density="comfortable" v-model="search" label="Search" prepend-inner-icon="mdi-magnify" variant="outlined" hide-details/>
         </v-col>
-        <v-col cols="auto" style="width: 140px;">
+        <v-col class="pa-2" :cols="isSmallScreen() ? '' : 'auto'" style="width: 140px;">
             <v-select @update:model-value="emit('resort')" hide-details density="comfortable" variant="outlined" label="Sort By" v-model="sort" :items="Object.keys(fields).sort()"/>
         </v-col>
-        <v-col cols="auto">
+        <v-col class="pa-2" cols="auto">
             <v-checkbox @update:model-value="emit('resort')" color="blue" hide-details density="comfortable" variant="outlined" label="Descending" v-model="descending"/>
         </v-col>
     </v-row>
-    <v-row class="pa-3" no-gutters>
+    <v-row class="pa-3 pt-1" no-gutters>
         <v-card style="max-height:300px; width:100%; overflow: scroll;">
             <v-row v-for="(rule, i) in filter" no-gutters align="center" justify="center">
                 <v-col cols="3">

@@ -3,6 +3,7 @@ import type { AlertDatas } from '~/layouts/default.vue';
 import { be, BearerFetch, type AiAnsRes, type ResError } from '~/shared/backend';
 import { dateFormat } from '~/shared/dateFunctions';
 import { globalKeys, Paths } from '~/shared/paths';
+import { useDisplay } from 'vuetify';
 
 const alertDatas = ref(inject(globalKeys.dashboardAlertKey) as AlertDatas)
 const barTitle = ref(inject(globalKeys.dashboardBarTitle) as string)
@@ -17,11 +18,7 @@ const chatWaiting = ref(false)
 const chatView = ref(null)
 const newC = ref(true)
 const chat = ref({ id: "", title: "", contents: [], createdAt: "", updatedAt: "" } as AiAnsRes)
-const chatListStatus = ref(false)
-
-const emit = defineEmits<{
-    (e: "sidebarToggle"): void
-}>()
+const chatListStatus = ref(true)
 
 onBeforeMount(async () => {
     chatSideBarLoading.value = true
@@ -48,7 +45,6 @@ const chatSelected = async (id: string) => {
     chatLoading.value = true
     try {
         const res = await BearerFetch(be.head + be.api.userspace.ai.chat + "?id=" + id) as AiAnsRes
-        console.log(res)
         chat.value = res
         chatLoading.value = false
     } catch (err) {
@@ -91,27 +87,44 @@ const send = async (text: string) => {
 }
 
 const del = async (id: string) => {
+    chatSideBarLoading.value = true
     try {
-        const res = await BearerFetch(be.head + be.api.userspace.ai.chat, {
+        const _ = await BearerFetch(be.head + be.api.userspace.ai.chat, {
             method: "DELETE",
             body: { id: id }
         }) as string
         chats.value = chats.value.filter(a => a.id !== id);
+        chatSideBarLoading.value = false
         if (chat.value.id === id) newC.value = true
     } catch (err) {
         errHandle(err as ResError)
     }
 }
 
+var smallScreen = false
+
+const isSmallScreen = () => {
+    if (process.server) return false
+    let res = useDisplay().width.value < 600
+    if (res === true && smallScreen === false) {
+        chatListStatus.value = false
+    }
+    smallScreen = res
+    return res
+}
+
 </script>
 
 <template>
-    <v-row no-gutters>
+    <v-row no-gutters align="center" justify="center" style="flex-wrap: nowrap;">
         <v-col cols="auto">
             <v-btn @click="sidebarStatus = !sidebarStatus" icon="mdi-dock-left" variant="text" />
         </v-col>
-        <v-col>
+        <v-col :cols="isSmallScreen() ? '' : 'auto'">
             <v-card-title class="ml-1 pl-1"><strong>Ai Bot</strong></v-card-title>
+        </v-col>
+        <v-col v-if="!isSmallScreen()">
+            <p>Powered by Google Gemini 1.5</p>
         </v-col>
         <v-col cols="auto">
             <v-btn icon="mdi-dock-right" @click="chatListStatus = !chatListStatus" variant="text" />
@@ -119,14 +132,26 @@ const del = async (id: string) => {
     </v-row>
     <v-divider />
     <v-row style="height: calc(100% - 49px)" no-gutters>
-        <v-col>
+        <v-col :cols="isSmallScreen() ? '12' : ''">
             <DashboardAiChat ref="chatView" :new-chat="newC" :chat="chat" v-model:waiting="chatWaiting"
                 :loading="chatLoading" @send="send" />
         </v-col>
-        <v-divider v-if="chatListStatus" vertical />
-        <v-col v-if="chatListStatus" cols="auto" style="width: 250px">
-            <DashboardAiChatList :chats="chats" :loading="false" @chat-selected="chatSelected" @new-chat="newC = true"
-                @delete="del" />
+        <v-divider v-if="!isSmallScreen() && chatListStatus" vertical />
+        <v-col v-if="!isSmallScreen() && chatListStatus" cols="auto" style="width: 250px">
+            <DashboardAiChatList :chats="chats" :loading="chatSideBarLoading" @chat-selected="chatSelected"
+                @new-chat="newC = true" @delete="del"/>
         </v-col>
+        <v-dialog v-if="isSmallScreen()" v-model="chatListStatus" hide-overlay fullscreen transition="dialog-right-transition">
+            <div class="bg-white" style="position: absolute; right: 0px; top: 64px; height: 100%; width: 250px;">
+                <v-row no-gutters align="end" justify="end">
+                    <v-col cols="auto">
+                        <v-btn icon="mdi-dock-right" @click="chatListStatus = !chatListStatus" variant="text" />
+                    </v-col>
+                </v-row>
+                <v-divider />
+                <DashboardAiChatList :chats="chats" :loading="chatSideBarLoading" @chat-selected="id => { chatListStatus = false; chatSelected(id) }"
+                    @new-chat="chatListStatus = false; newC = true" @delete="del" style="height: calc(100% - 64px - 49px);"/>
+            </div>
+        </v-dialog>
     </v-row>
 </template>

@@ -39,6 +39,7 @@ final class Transaction: DModel, @unchecked Sendable {
         ("location", .string, [.required], false),
         ("brand", .string, [], false),
         ("category", .string, [.required], false),
+        ("img", FileUpload.T[0].1, [.required, .references(FileUpload.schema, FileUpload.T[0].0)], false),
         ("transaction_date", .date, [.required], false),
     ]
 
@@ -51,21 +52,22 @@ final class Transaction: DModel, @unchecked Sendable {
     @Field(key: T[6].0)                     var location: String
     @Field(key: T[7].0)                     var brand: String?
     @Field(key: T[8].0)                     var category: String
-    @Timestamp(key: T[9].0, on: .none,
+    @Parent(key: T[9].0)                    var img: FileUpload
+    @Timestamp(key: T[10].0, on: .none,
     format: .default)                       var transactionDate: Date?
 
     typealias REQ = User.REQ
 
     struct NEW: Content, Sendable { 
-        var consumerId: User.IDValue; var itemName: String; var itemAmount: Int; 
+        var itemName: String; var itemAmount: Int; 
         var pricePerUnit: Float; var location: String; var brand: String?; 
-        var category: String; var __transactionDate: String
+        var category: String; var __transactionDate: String; var imgPath: FileUpload.IDValue?
     }
     
     struct DTO: Content, Sendable { 
         var id: Transaction.IDValue; var itemName: String; var itemAmount: Int; 
         var pricePerUnit: Float; var location: String; var brand: String?; 
-        var category: Category; var transactionDate: Date
+        var category: Category; var transactionDate: Date; var imgPath: FileUpload.DTO?
     }
 
     struct ALLTRANSRES: Content, Sendable {
@@ -78,7 +80,8 @@ final class Transaction: DModel, @unchecked Sendable {
             let category = Category(rawValue: self.category),
             let transactionDate = self.transactionDate
         else { throw Abort(.badRequest, reason: "Wrong category value") }
-        return try DTO(
+        if (self.$img.id != FileUpload.nullID) { try await self.$img.load(on: req.db) }
+        return try await DTO(
             id: self.requireID(),
             itemName: self.itemName,
             itemAmount: self.itemAmount,
@@ -86,29 +89,31 @@ final class Transaction: DModel, @unchecked Sendable {
             location: self.location,
             brand: self.brand,
             category: category,
-            transactionDate: transactionDate
+            transactionDate: transactionDate,
+            imgPath: self.$img.id == FileUpload.nullID ? nil : self.img.dto(req: req)
         )
     }
 
     init() {}
 
-    convenience init(data: NEW) throws {
+    convenience init(consumerId: User.IDValue, data: NEW) throws {
         guard let category = Category(rawValue: data.category) else { throw Abort(.badRequest, reason: "Wrong category value") }
         self.init(
-            consumerId: data.consumerId,
+            consumerId: consumerId,
             itemName: data.itemName,
             itemAmount: data.itemAmount,
             pricePerUnit: data.pricePerUnit,
             location: data.location,
             brand: data.brand,
             category: category,
-            transactionDate: ShortDateFormatter().date(from: data.__transactionDate)
+            transactionDate: ShortDateFormatter().date(from: data.__transactionDate),
+            img: data.imgPath ?? FileUpload.nullID
         )
     }
 
     init( 
         consumerId: User.IDValue, itemName: String, itemAmount: Int, pricePerUnit: Float, 
-        location: String, brand: String? = nil, category: Category, transactionDate: Date?
+        location: String, brand: String? = nil, category: Category, transactionDate: Date?, img: FileUpload.IDValue
     ) {
         self.id = nil
         self.$consumer.id = consumerId
@@ -119,6 +124,7 @@ final class Transaction: DModel, @unchecked Sendable {
         self.location = location
         self.brand = brand
         self.category = category.rawValue
+        self.$img.id = img
         self.transactionDate = transactionDate
     }
 
@@ -131,7 +137,7 @@ extension Transaction {
     struct UPD: Content, Sendable {
         var id: Transaction.IDValue; var itemName: String; var itemAmount: Int; 
         var pricePerUnit: Float; var location: String; var brand: String?; 
-        var category: String; var __transactionDate: String
+        var category: String; var __transactionDate: String; var imgPath: FileUpload.IDValue?
     }
 
     convenience init(consumerId: Transaction.IDValue, data: UPD) throws {
@@ -144,7 +150,8 @@ extension Transaction {
             location: data.location,
             brand: data.brand,
             category: category,
-            transactionDate: ShortDateFormatter().date(from: data.__transactionDate)
+            transactionDate: ShortDateFormatter().date(from: data.__transactionDate),
+            img: data.imgPath ?? FileUpload.nullID
         )
     }
 }

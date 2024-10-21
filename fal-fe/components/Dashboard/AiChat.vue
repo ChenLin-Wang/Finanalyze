@@ -37,7 +37,7 @@ const scrollToBottom = () => {
 const handleKeyDown = (event: KeyboardEvent) => {
     const isMac = navigator.userAgent.includes('Mac')
     if ((isMac ? event.metaKey : event.ctrlKey) && event.key === 'Enter') {
-        sendMessage();
+        if (!waiting.value && input.value !== '') sendMessage();
     }
 };
 

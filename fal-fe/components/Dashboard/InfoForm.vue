@@ -27,6 +27,7 @@ export type FormValue = {
 
 const props = defineProps<{
     infos: FormValue
+    alwaysEnableSubmit: boolean
 }>()
 
 const form = ref<VForm | null>(null);
@@ -97,13 +98,13 @@ const hintGroups = [
                         </v-text-field>
                         <v-text-field v-else-if="<string>hint[4] === 'number'" :label="<string>hint[0] + (hint[1] ? ' *' : '')"
                             v-model.number="values[<keyof FormValue>hint[2]]" type="number" :disabled="<boolean>hint[5]"
-                            :rules="(hint[1] ? [requireValidate('string', <string>hint[0])] : []).concat(<Array<(v: any) => string | true>>hint[6])">
+                            :rules="(hint[1] ? [requireValidate('number', <string>hint[0])] : []).concat(<Array<(v: any) => string | true>>hint[6])">
                         </v-text-field>
                     </v-col>
                 </v-row>
             </div>
             <v-row class="mt-5 mb-3 mx-1">
-                <v-btn class="text-none" :disabled="deepEqual(values, infos, ['bdayDate'])" color="white" width="100%"
+                <v-btn class="text-none" :disabled="alwaysEnableSubmit ? false : deepEqual(values, infos, ['bdayDate'])" color="white" width="100%"
                     @click="submit">Submit</v-btn>
             </v-row>
         </v-form>

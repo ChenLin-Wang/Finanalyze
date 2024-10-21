@@ -90,7 +90,7 @@ final class UserInfo: DModel, @unchecked Sendable {
 
     init(
         userId: User.IDValue, username: String = RandomString(length: 12), firstName: String = "", lastName: String = "", middleName: String? = nil,
-        avatar: String = "https://api.finanalyze.inspiral.site/uploads/avatar/default.png", age: Int? = nil, gender: Gender = .none, birthday: Date? = nil,
+        avatar: String = "https://api.finanalyze.inspiral.site/images/default.png", age: Int? = nil, gender: Gender = .none, birthday: Date? = nil,
         address: String? = nil, phoneNum: String? = nil, course: String? = nil,
         yearLvl: String? = nil, school: String? = nil
     ) {

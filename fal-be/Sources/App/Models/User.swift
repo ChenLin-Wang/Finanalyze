@@ -22,7 +22,7 @@ import SQLKit
 
 final class User: DModel, @unchecked Sendable {
     static let schema = TableNames.users
-
+    static let nullID: IDValue = .init(uuidString: "00000000-0000-0000-0000-000000000000")!
     static let T: [FieldType] = [
         ("id", .uuid, [.required], true),
         ("email", .string, [.required], true),
@@ -63,8 +63,8 @@ final class User: DModel, @unchecked Sendable {
 
     convenience init(data: NEW) throws { self.init(email: data.email, passwordHash: try Bcrypt.hash(data.password)) }
 
-    init(email: String, passwordHash: String) {
-        self.id = nil
+    init(id: IDValue? = nil, email: String, passwordHash: String) {
+        self.id = id
         self.email = email
         self.passwordHash = passwordHash
         self.createdAt = nil
@@ -88,5 +88,11 @@ extension User: ModelAuthenticatable {
 
     func verify(password: String) throws -> Bool {
         try Bcrypt.verify(password, created: self.passwordHash)
+    }
+}
+
+extension User.MIG {
+    func migrationFinished(on database: Database) {
+        let _ = User(id: User.nullID, email: "-", passwordHash: "-").save(on: database)
     }
 }

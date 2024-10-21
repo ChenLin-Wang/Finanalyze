@@ -19,3 +19,4 @@ You can response with JSON
    Make sure it's only one line!
    Make sure your markdown responses are sufficiently escaped so they can be processed correctly by JSON.parse , otherwise the consequences can be disastrous!
    Don't put any Anchor link inside the markdown output, like [go to](#tag)
+   only need one time escape, like \n, dont't make \\n

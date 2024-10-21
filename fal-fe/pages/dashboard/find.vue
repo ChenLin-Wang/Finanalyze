@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TransactionValue } from '~/components/Dashboard/TransactionForm.vue';
+import { toFormValue, type TransactionValue } from '~/components/Dashboard/TransactionConvertor';
 import type { AlertDatas, LoadingStatus } from '~/layouts/default.vue';
 import { be, BearerFetch, type AllTransRes, type ResError, type TransactionRes } from '~/shared/backend';
 import { delay, localClear } from '~/shared/funcs';
@@ -20,19 +20,6 @@ const pageCount = () => Math.ceil(totalCount.value / numPerPage.value)
 
 const sort = ref("Email")
 const descending = ref(true)
-
-function toFormValue(value: TransactionRes): TransactionValue {
-    return {
-        id: value.id,
-        itemName: value.itemName,
-        itemAmount: +value.itemAmount,
-        pricePerUnit: +value.pricePerUnit,
-        location: value.location,
-        brand: value.brand,
-        category: value.category,
-        __transactionDate: value.transactionDate.split('T')[0]
-    }
-}
 
 onBeforeMount(async () => await loadTransactions())
 
@@ -69,7 +56,6 @@ const loadTransactions = async () => {
     const filterStr = f.join(";")
     try {
         totalCount.value = await BearerFetch(be.head + be.api.userspace.transactions.all + "/count?filter=" + filterStr) as number
-        console.log(totalCount.value)
         checkCurPageIndex()
         const res = await BearerFetch(
             be.head +
@@ -85,7 +71,6 @@ const loadTransactions = async () => {
             s.user = r.user
             return s
         })
-        console.log(allTrans)
         transactions.value = allTrans
     } catch (err) {
         errHandle(err as ResError)
@@ -96,12 +81,13 @@ const loadTransactions = async () => {
 
 <template>
     <v-container fluid class="d-flex flex-column pa-0" style="height: 100%">
-        <div class="mt-0 pt-1 flex-grow-1 pa-3" style="overflow: scroll;">
+        <div class="mt-0 pt-3 flex-grow-1 pa-3" style="overflow: scroll;">
             <DashboardFilter :with-users="true" @search="loadTransactions()" @resort="loadTransactions()"
                 v-model:filter="filters" v-model:search="keyword" v-model:sort="sort" v-model:descending="descending" />
-            <DashboardTransactionList v-if="!loading"
+            <DashboardTransactionList v-if="!loading && transactions.length > 0"
                 ref="transactionList" :numPerPage="numPerPage" :transactions="transactions" :deletable="false" />
-            <v-skeleton-loader v-else color="white" :elevation="0" class="border mx-auto pa-0 fill-width" type="table"
+            <DashboardNull v-if="!loading && transactions.length == 0" label="Transactions" />
+            <v-skeleton-loader v-if="loading" color="white" :elevation="0" class="border mx-auto pa-0 fill-width" type="table"
             style="display: block; height: 446px" />
         </div>
         <v-divider />

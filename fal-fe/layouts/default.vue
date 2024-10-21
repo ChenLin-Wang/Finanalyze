@@ -73,8 +73,8 @@ router.afterEach(() => loading.value.content = false)
     <v-main>
         <v-container fluid class="pa-0 ma-0">
             <v-row no-gutters>
-                <v-col>
-                    <Alert :type="alertDatas.type" :title="alertDatas.title" :info="alertDatas.info"
+                <v-col style="position: relative">
+                    <Alert style="position: absolute; max-width: 400px; right: 0px; top: 10px; z-index: 10;" :type="alertDatas.type" :title="alertDatas.title" :info="alertDatas.info"
                         v-model:show="alertDatas.show" :timeout="3000" />
                     <v-row v-if="barTitle !== ''" no-gutters>
                         <v-col cols="auto">

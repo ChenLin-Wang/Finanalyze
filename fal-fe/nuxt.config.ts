@@ -41,7 +41,8 @@ export default defineNuxtConfig({
         },
         highlight: {
             theme: 'github-light',
-        }
+        },
+        watch: false,
     },
     vite: {
         vue: {
@@ -49,5 +50,5 @@ export default defineNuxtConfig({
                 transformAssetUrls,             
             }
         },
-    },
+    }
 })

@@ -11,7 +11,7 @@ const logOut = () => { localClear() }
 
 <template>
     <v-container fluid class="text-begin d-flex flex-column pa-0 ma-0 fill-height">
-        <div class="flex-shrink-0">
+        <div class="flex-shrink-0" style="width: 100%">
             <v-list>
                 <v-list-item :prepend-avatar="userInfos.avatar" :subtitle="userInfos?.user?.email"
                     :title="userInfos?.username">

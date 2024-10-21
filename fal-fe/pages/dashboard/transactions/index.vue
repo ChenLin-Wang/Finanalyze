@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TransactionValue } from '~/components/Dashboard/TransactionForm.vue';
+import { toFormRes, toFormValue, type TransactionValue } from '~/components/Dashboard/TransactionConvertor';
 import type { AlertDatas, LoadingStatus } from '~/layouts/default.vue';
 import { be, BearerFetch, type ResError, type TransactionRes } from '~/shared/backend';
 import { delay, localClear } from '~/shared/funcs';
@@ -20,32 +20,6 @@ const pageCount = () => Math.ceil(totalCount.value / numPerPage.value)
 
 const sort = ref("Date")
 const descending = ref(true)
-
-function toFormValue(value: TransactionRes): TransactionValue {
-    return {
-        id: value.id,
-        itemName: value.itemName,
-        itemAmount: +value.itemAmount,
-        pricePerUnit: +value.pricePerUnit,
-        location: value.location,
-        brand: value.brand,
-        category: value.category,
-        __transactionDate: value.transactionDate.split('T')[0]
-    }
-}
-
-function toFormRes(value: TransactionValue): TransactionRes {
-    return {
-        id: value.id,
-        itemName: value.itemName,
-        itemAmount: +value.itemAmount,
-        pricePerUnit: +value.pricePerUnit,
-        location: value.location,
-        brand: value.brand,
-        category: value.category,
-        transactionDate: value.__transactionDate
-    }
-}
 
 onBeforeMount(async () => await loadTransactions())
 
@@ -142,14 +116,15 @@ const loadTransactions = async () => {
 
 <template>
     <v-container fluid class="d-flex flex-column pa-0" style="height: 100%">
-        <div class="mt-0 pt-1 flex-grow-1 pa-3" style="overflow: scroll;">
+        <div class="mt-0 pt-3 flex-grow-1 pa-3" style="overflow: scroll;">
             <DashboardFilter :with-users="false" @search="loadTransactions()" @resort="loadTransactions()"
                 v-model:filter="filters" v-model:search="keyword" v-model:sort="sort" v-model:descending="descending" />
-            <DashboardTransactionList v-if="!loading"
+            <DashboardTransactionList v-if="!loading && transactions.length > 0"
                 ref="transactionList" :numPerPage="numPerPage" :transactions="transactions.map(a => toFormValue(a))"
                 @submit="submit" @delete="del" deletable />
-            <v-skeleton-loader v-else color="white" :elevation="0" class="border mx-auto pa-0 fill-width" type="table"
-            style="display: block; height: 446px" />
+            <DashboardNull v-if="!loading && transactions.length == 0" label="Transactions" />
+            <v-skeleton-loader v-if="loading" color="white" :elevation="0" class="border mx-auto pa-0 fill-width" type="table"
+                style="display: block; height: 446px" />
         </div>
         <v-divider />
         <v-row class="text-center flex-shrink-0 flex-grow-0 px-3" style="height:64px" no-gutters align="center"
@@ -162,6 +137,9 @@ const loadTransactions = async () => {
             <v-col class="mx-0">
                 <v-pagination class="mx-0" v-model="curPage" @update:modelValue="loadTransactions()" rounded="shaped"
                     :length="pageCount()" />
+            </v-col>
+            <v-col cols="auto">
+                <v-btn rounded variant="elevated" @click="useRouter().push(Paths.newTransaction)" style="width: 100%;">New Transaction</v-btn>
             </v-col>
         </v-row>
     </v-container>

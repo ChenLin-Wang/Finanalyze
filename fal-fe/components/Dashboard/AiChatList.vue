@@ -22,7 +22,7 @@ const del = (id: string) => emit("delete", id)
 
 <template>
     <v-container fluid class="text-begin pa-0 ma-0 d-flex flex-column" style="height: 100%;">
-        <v-list v-if="!loading" class="flex-grow-1" :lines="false" density="default"
+        <v-list v-if="!loading && chats.length > 0" class="flex-grow-1" :lines="false" density="default"
             style="overflow: scroll; height: 0px;;" nav>
             <v-list-item lines="one" v-for="chat in chats" :key="chat.id" :value="chat.id" color="primary"
                 @click="chatSelected(chat.id)">
@@ -33,7 +33,8 @@ const del = (id: string) => emit("delete", id)
                 </template>
             </v-list-item>
         </v-list>
-        <div v-else class="flex-grow-1" style="overflow: scroll">
+        <DashboardNull v-if="!loading && chats.length === 0" label="Chats" />
+        <div v-if="loading" class="flex-grow-1" style="overflow: scroll">
             <v-skeleton-loader color="white" :elevation="0" class="flex-skeleton"
                 type="list-item-two-line, divider, list-item-two-line, divider, list-item-two-line, divider, list-item-two-line, divider, list-item-two-line, divider, list-item-two-line, divider"
                 style="height: 0px" />

@@ -30,8 +30,8 @@ struct OverviewC: RouteCollection {
             db: req.db as! PostgresDatabase
         ).first
         return .init(
-            totalCost: totalRes["cost"]!.float!,
-            totalCount: totalRes["count"]!.int!,
+            totalCost: totalRes["cost"]?.float ?? 0,
+            totalCount: totalRes["count"]?.int ?? 0,
             currentMonthCost: monthlyRes?.costWeight ?? 0,
             currentMonthCount: monthlyRes?.countWeight ?? 0,
             lastMonthCost: lastMonthlyRes?.costWeight ?? 0,

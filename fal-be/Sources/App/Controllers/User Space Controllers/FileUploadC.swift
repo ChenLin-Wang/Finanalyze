@@ -2,6 +2,9 @@ import Vapor
 import Fluent
 
 struct FileUploadC: RouteCollection {
+
+    static let AIDatabaseVisionURI = URI("http://localhost:4773/vision")
+
     func boot(routes: RoutesBuilder) throws {
         let uploadRoute = routes.grouped("files")
         for t in [FileUpload.UploadType.avatar, FileUpload.UploadType.item] {
@@ -27,8 +30,16 @@ struct FileUploadC: RouteCollection {
         let file = try req.content.decode(FileUpload.NEW.self)
         let realName = RandomTimeBasedName() + "_" + file.name 
         let path = directory + realName
-        let fileData = try FileUpload(userId: user.requireID(), path: "https://api.finanalyze.inspiral.site/" + pathComp + realName, type: type, data: file)
         try file.data.write(to: URL(fileURLWithPath: path))
+        var detect: [FileUpload.DTO.Detect] = []
+        if file.detect {
+            let answer = try await req.client.post(Self.AIDatabaseVisionURI) { clientRequest in
+                clientRequest.headers.contentType = .json
+                clientRequest.body = .init(data: try JSONSerialization.data(withJSONObject: ["link": path]))
+            }
+            detect = try answer.content.decode([FileUpload.DTO.Detect].self)
+        }
+        let fileData = try FileUpload(userId: user.requireID(), path: "https://api.finanalyze.inspiral.site/" + pathComp + realName, type: type, detect: detect, data: file)
         try await fileData.save(on: req.db)
         return fileData
     }

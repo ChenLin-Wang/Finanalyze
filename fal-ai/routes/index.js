@@ -1,4 +1,4 @@
-const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require("@google/generative-ai")
+const { GoogleGenerativeAI } = require("@google/generative-ai")
 const genAI = new GoogleGenerativeAI("AIzaSyByNdiC3Szp9c_wFL1w_PkpIsOJkOF0FvE")
 const model = genAI.getGenerativeModel({
     model: "gemini-1.5-pro",
@@ -107,11 +107,8 @@ router.post('/title', async function (req, res, next) {
 
 function errHandle(err, req, res) {
     if (err.status === 400) {
-        console.log("Blocked")
-        res.json({ type: "text", text: "Sorry, your question was blocked.", blocked: true })
-    } else {
         console.log(err)
-        res.status(500).json({ error: err.toString() })
+        res.json({ type: "text", text: err.toString(), blocked: true })
     }
 }
 
