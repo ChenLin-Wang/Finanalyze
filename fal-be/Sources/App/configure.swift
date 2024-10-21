@@ -39,7 +39,6 @@ public func configure(_ app: Application) async throws {
 
     app.migrations.add(User.MIG())
     app.migrations.add(FileUpload.MIG())
-    app.migrations.add(PswReset.MIG())
     app.migrations.add(Token.MIG())
     app.migrations.add(UserInfo.MIG())
     app.migrations.add(AiChat.MIG())
