@@ -62,9 +62,8 @@ Not yet
 - **Frontend**: Nuxt.js + Vue.js + TypeScript
 - **Backend**: Vapor + Swift
 - **Database**: PostgreSQL
-- **AI Integration**: Google Vision AI
+- **AI Integration**: Google Vision AI (Image Detect) & Google Gemini 1.5 (Chat Bot)
 - **Hosting**:
-  - **Domain Name**: GoDaddy
   - **Cloud Server**: Google VPS (Ubuntu 22.04.5 LTS)
 
 
