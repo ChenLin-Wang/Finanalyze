@@ -1,0 +1,22 @@
+{
+    "apps": [
+        {
+            "name": "finanalyze-frontend",
+            "cwd": "./fal-fe",
+            "script": ".output/server/index.mjs",
+            "interpreter": "node@23.1.0",
+            "env": {
+                "PORT": "3000"
+            }
+        }, {
+            "name": "finanalyze-backend",
+            "cwd": "./fal-be",
+            "script": ".build/release/App"
+        }, {
+            "name": "finanalyze-ai",
+            "cwd": "./fal-ai",
+            "script": "bin/www",
+            "interpreter": "node@23.1.0"
+        }
+    ]
+}
